@@ -1,0 +1,71 @@
+﻿<Window x:Class="comp_app.MVVM.View.DocumentListWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+        xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+        xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+        xmlns:local="clr-namespace:comp_app.MVVM.View"
+        xmlns:service="clr-namespace:comp_app.Services"
+        mc:Ignorable="d"
+        Title="DocumentListWindow" Height="850" Width="1200">
+    
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Templates/TemplateResourses.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="32"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <dx:SimpleButton Template="{StaticResource buttonTamplate}" Glyph="../../Images/refresh.png" Command="{Binding RefreshCommand}">Обновить</dx:SimpleButton>
+            <dx:SimpleButton Template="{StaticResource buttonTamplate}" Glyph="../../Images/add.png" Command="{Binding AddNewCommand}">Добавить</dx:SimpleButton>
+            <dx:SimpleButton Template="{StaticResource buttonTamplate}" Glyph="../../Images/del.png" Command="{Binding DeleteCommand}">Удалить</dx:SimpleButton>
+            <dx:SimpleButton Template="{StaticResource buttonTamplate}" Glyph="../../Images/edit.png" Command="{Binding EditCommand}">Редакировать</dx:SimpleButton>
+        </StackPanel>
+        
+        <dxg:GridControl Grid.Row="1" 
+                         Name="grid" 
+                         ItemsSource="{Binding Path=(service:DataRepository.Documents)}" 
+                         ShowBorder="False"
+                         SelectedItem="{Binding SelectedDocument}">
+            <dxg:GridControl.Columns>
+                <dxg:GridColumn FieldName="Id" Header="Id"/>
+                <dxg:GridColumn FieldName="StatusId" Header="Cтатус"/>
+                <dxg:GridColumn FieldName="ClearanceMounth" Header="Месяц оформления"/>
+                <dxg:GridColumn FieldName="AccurualMounth" Header="Месяц начислений"/>
+                <dxg:GridColumn FieldName="ProviderId" Header="Поставщик"/>
+                <dxg:GridColumn FieldName="CompanyId" Header="Компания"/>
+                <dxg:GridColumn FieldName="ItemId" Header="Статья"/>
+                <dxg:GridColumn FieldName="Comments" Header="Примечания"/>
+                <dxg:GridColumn FieldName="FactSum" Header="Факт"/>
+                <dxg:GridColumn FieldName="PlanSum" Header="План"/>
+                <dxg:GridColumn FieldName="InvoiceId" Header="№ СФ"/>
+                <dxg:GridColumn FieldName="PaymentMethodId" Header="Способ оплаты"/>
+                <dxg:GridColumn FieldName="CompensationDate" Header="Дата документа"/>
+                <dxg:GridColumn FieldName="DocumentDateTime" Header="Дата компенсации"/>
+                <dxg:GridColumn FieldName="HasOriginal" Header="Оригинал"/>
+                <dxg:GridColumn FieldName="HasScan" Header="Скан"/>
+                
+            </dxg:GridControl.Columns>
+            <dxg:GridControl.View>
+                <dxg:TableView Name="view" 
+                               BestFitMode="Smart"
+                               AllowBestFit="True"
+                               BestFitArea="All"
+                               AllowPerPixelScrolling="True" 
+                               ShowGroupPanel="True" 
+                               ShowAutoFilterRow="True"  
+                               AllowEditing="False" 
+                               NavigationStyle="Cell" />
+            </dxg:GridControl.View>
+        </dxg:GridControl>
+    </Grid>
+</Window>
