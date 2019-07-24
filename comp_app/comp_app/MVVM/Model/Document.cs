@@ -22,22 +22,9 @@ namespace comp_app.MVVM.Model
         public string PlanSum { get; set; } // План
         public string InvoiceId { get; set; } // № СФ
         public string PaymentMethodId { get; set; } // Способ оплаты
-        
-        public DateTime CompensationDate => string.IsNullOrEmpty(_CompensationDate)?DateTime.MinValue:DateTime.Parse(_CompensationDate);// Дата документа
-        public DateTime DocumentDateTime => string.IsNullOrEmpty(_DocumentDateTime) ? DateTime.MinValue : DateTime.Parse(_DocumentDateTime); // Дата компенсации
-        public bool HasOriginal => true_list.Contains(_HasOriginal); // Оригинал
-        public bool HasScan => true_list.Contains(_HasScan); // Скан
-
-
-        /**/public string _HasOriginal { get; set; } 
-        /**/public string _HasScan { get; set; } 
-        /**/public string _DocumentDateTime { get; set; }
-        /**/public string _CompensationDate { get; set; }
-
-
-
-        private readonly List<string> true_list = new List<string>() { "1", "true", "TRUE", "True", "T", "t" };
-
-
+        public string HasOriginal { get; set; } // Оригинал
+        public string HasScan { get; set; } // Скан
+        public string DocumentDateTime { get; set; }// Дата документа 
+        public string CompensationDate { get; set; }// Дата компенсации
     }
 }

@@ -6,8 +6,11 @@
         xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
         xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
         xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+        xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"  
         xmlns:local="clr-namespace:comp_app.MVVM.View"
-        xmlns:service="clr-namespace:comp_app.Services"
+        xmlns:model="clr-namespace:comp_app.MVVM.Model"
+        xmlns:services="clr-namespace:comp_app.Services"
+        xmlns:conv="clr-namespace:comp_app.Services.Converters"
         mc:Ignorable="d"
         Title="DocumentListWindow" Height="850" Width="1200">
     
@@ -16,6 +19,9 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Templates/TemplateResourses.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <conv:StringToDateTimeConverter x:Key="StringToDateTimeConverter"/> 
+            <conv:StringToBoolConverter x:Key="StringToBoolConverter"/>
+            <conv:StringToDecimalConverter x:Key="StringToDecimalConverter"/>
         </ResourceDictionary>
     </Window.Resources>
     <Grid>
@@ -33,38 +39,237 @@
         
         <dxg:GridControl Grid.Row="1" 
                          Name="grid" 
-                         ItemsSource="{Binding Path=(service:DataRepository.Documents)}" 
+                         ItemsSource="{Binding Path=(services:DataRepository.Documents)}" 
                          ShowBorder="False"
-                         SelectedItem="{Binding SelectedDocument}">
+                         SelectedItem="{Binding SelectedDocument}" >
             <dxg:GridControl.Columns>
-                <dxg:GridColumn FieldName="Id" Header="Id"/>
-                <dxg:GridColumn FieldName="StatusId" Header="Cтатус"/>
-                <dxg:GridColumn FieldName="ClearanceMounth" Header="Месяц оформления"/>
-                <dxg:GridColumn FieldName="AccurualMounth" Header="Месяц начислений"/>
-                <dxg:GridColumn FieldName="ProviderId" Header="Поставщик"/>
-                <dxg:GridColumn FieldName="CompanyId" Header="Компания"/>
-                <dxg:GridColumn FieldName="ItemId" Header="Статья"/>
+
+                <dxg:GridColumn Header="Статус" FieldName="StatusId">
+                    <dxg:GridColumn.EditSettings>
+                        <dxg:LookUpEditSettings ItemsSource="{Binding Path=(services:DataRepository.Statuses)}" 
+                                                AutoComplete="True" 
+                                                ShowSizeGrip="True" 
+                                                ImmediatePopup="True" 
+                                                IncrementalFiltering="True" 
+                                                AutoPopulateColumns="False" 
+                                                IsPopupAutoWidth="False" 
+                                                DisplayMember="Name"
+                                                ValueMember="Id">
+                            <dxg:LookUpEditSettings.PopupContentTemplate>
+                                <ControlTemplate>
+                                    <dxg:GridControl Name="PART_GridControl">
+                                        <dxg:GridControl.Columns>
+                                            <dxg:GridColumn FieldName="Id" Header="Идентификатор"/>
+                                            <dxg:GridColumn FieldName="Name" Header="наименование"/>
+                                        </dxg:GridControl.Columns>
+                                        <dxg:GridControl.View>
+                                            <dxg:TableView AutoWidth="True" ShowSearchPanelMode="Always"/>
+                                        </dxg:GridControl.View>
+                                    </dxg:GridControl>
+                                </ControlTemplate>
+                            </dxg:LookUpEditSettings.PopupContentTemplate>
+                            <dxg:LookUpEditSettings.StyleSettings>
+                                <dxg:SearchLookUpEditStyleSettings/>
+                            </dxg:LookUpEditSettings.StyleSettings>
+                        </dxg:LookUpEditSettings>
+                    </dxg:GridColumn.EditSettings>
+                </dxg:GridColumn>
+
+                <dxg:GridColumn Binding="{Binding ClearanceMounth, Mode=TwoWay, Converter={StaticResource StringToDateTimeConverter}}"  
+                                Header="Месяц оформления">
+                    <dxg:GridColumn.EditSettings>
+                        <dxe:DateEditSettings Mask="MMM/yyyy" MaskUseAsDisplayFormat="True"/>
+                    </dxg:GridColumn.EditSettings>
+                </dxg:GridColumn>
+
+                <dxg:GridColumn Binding="{Binding AccurualMounth, Mode=TwoWay, Converter={StaticResource StringToDateTimeConverter}}"  
+                                Header="Месяц начислений">
+                    <dxg:GridColumn.EditSettings>
+                        <dxe:DateEditSettings Mask="MMM/yyyy" MaskUseAsDisplayFormat="True"/>
+                    </dxg:GridColumn.EditSettings>
+                </dxg:GridColumn>
+
+                <dxg:GridColumn FieldName="ProviderId" Header="Поставщик">
+                    <dxg:GridColumn.EditSettings>
+                        <dxg:LookUpEditSettings ItemsSource="{Binding Path=(services:DataRepository.Providers)}" 
+                                                AutoComplete="True" 
+                                                ShowSizeGrip="True" 
+                                                ImmediatePopup="True" 
+                                                IncrementalFiltering="True" 
+                                                AutoPopulateColumns="False" 
+                                                IsPopupAutoWidth="False" 
+                                                DisplayMember="Name"
+                                                ValueMember="Id">
+                            <dxg:LookUpEditSettings.PopupContentTemplate>
+                                <ControlTemplate>
+                                    <dxg:GridControl Name="PART_GridControl">
+                                        <dxg:GridControl.Columns>
+                                            <dxg:GridColumn FieldName="Id" Header="Идентификатор"/>
+                                            <dxg:GridColumn FieldName="Name" Header="наименование"/>
+                                        </dxg:GridControl.Columns>
+                                        <dxg:GridControl.View>
+                                            <dxg:TableView AutoWidth="True" ShowSearchPanelMode="Always"/>
+                                        </dxg:GridControl.View>
+                                    </dxg:GridControl>
+                                </ControlTemplate>
+                            </dxg:LookUpEditSettings.PopupContentTemplate>
+                            <dxg:LookUpEditSettings.StyleSettings>
+                                <dxg:SearchLookUpEditStyleSettings/>
+                            </dxg:LookUpEditSettings.StyleSettings>
+                        </dxg:LookUpEditSettings>
+                    </dxg:GridColumn.EditSettings>
+                </dxg:GridColumn>
+                
+                <dxg:GridColumn FieldName="CompanyId" Header="Компания">
+                    <dxg:GridColumn.EditSettings>
+                        <dxg:LookUpEditSettings ItemsSource="{Binding Path=(services:DataRepository.Companies)}" 
+                                                AutoComplete="True" 
+                                                ShowSizeGrip="True" 
+                                                ImmediatePopup="True" 
+                                                IncrementalFiltering="True" 
+                                                AutoPopulateColumns="False" 
+                                                IsPopupAutoWidth="False" 
+                                                DisplayMember="Name"
+                                                ValueMember="Id">
+                            <dxg:LookUpEditSettings.PopupContentTemplate>
+                                <ControlTemplate>
+                                    <dxg:GridControl Name="PART_GridControl">
+                                        <dxg:GridControl.Columns>
+                                            <dxg:GridColumn FieldName="Id" Header="Идентификатор"/>
+                                            <dxg:GridColumn FieldName="Name" Header="наименование"/>
+                                        </dxg:GridControl.Columns>
+                                        <dxg:GridControl.View>
+                                            <dxg:TableView AutoWidth="True" ShowSearchPanelMode="Always"/>
+                                        </dxg:GridControl.View>
+                                    </dxg:GridControl>
+                                </ControlTemplate>
+                            </dxg:LookUpEditSettings.PopupContentTemplate>
+                            <dxg:LookUpEditSettings.StyleSettings>
+                                <dxg:SearchLookUpEditStyleSettings/>
+                            </dxg:LookUpEditSettings.StyleSettings>
+                        </dxg:LookUpEditSettings>
+                    </dxg:GridColumn.EditSettings>
+                </dxg:GridColumn>
+                
+                <dxg:GridColumn FieldName="ItemId" Header="Статья">
+                    <dxg:GridColumn.EditSettings>
+                        <dxg:LookUpEditSettings ItemsSource="{Binding Path=(services:DataRepository.Items)}" 
+                                                AutoComplete="True" 
+                                                ShowSizeGrip="True" 
+                                                ImmediatePopup="True" 
+                                                IncrementalFiltering="True" 
+                                                AutoPopulateColumns="False" 
+                                                IsPopupAutoWidth="False" 
+                                                DisplayMember="Name"
+                                                ValueMember="Id">
+                            <dxg:LookUpEditSettings.PopupContentTemplate>
+                                <ControlTemplate>
+                                    <dxg:GridControl Name="PART_GridControl">
+                                        <dxg:GridControl.Columns>
+                                            <dxg:GridColumn FieldName="Id" Header="Идентификатор"/>
+                                            <dxg:GridColumn FieldName="Name" Header="наименование"/>
+                                        </dxg:GridControl.Columns>
+                                        <dxg:GridControl.View>
+                                            <dxg:TableView AutoWidth="True" ShowSearchPanelMode="Always"/>
+                                        </dxg:GridControl.View>
+                                    </dxg:GridControl>
+                                </ControlTemplate>
+                            </dxg:LookUpEditSettings.PopupContentTemplate>
+                            <dxg:LookUpEditSettings.StyleSettings>
+                                <dxg:SearchLookUpEditStyleSettings/>
+                            </dxg:LookUpEditSettings.StyleSettings>
+                        </dxg:LookUpEditSettings>
+                    </dxg:GridColumn.EditSettings>
+                </dxg:GridColumn>
+                
                 <dxg:GridColumn FieldName="Comments" Header="Примечания"/>
-                <dxg:GridColumn FieldName="FactSum" Header="Факт"/>
-                <dxg:GridColumn FieldName="PlanSum" Header="План"/>
-                <dxg:GridColumn FieldName="InvoiceId" Header="№ СФ"/>
-                <dxg:GridColumn FieldName="PaymentMethodId" Header="Способ оплаты"/>
-                <dxg:GridColumn FieldName="CompensationDate" Header="Дата документа"/>
-                <dxg:GridColumn FieldName="DocumentDateTime" Header="Дата компенсации"/>
-                <dxg:GridColumn FieldName="HasOriginal" Header="Оригинал"/>
-                <dxg:GridColumn FieldName="HasScan" Header="Скан"/>
+                <dxg:GridColumn Header="Факт" Binding="{Binding FactSum, Mode=TwoWay, Converter={StaticResource StringToDecimalConverter}}" UnboundType="Decimal">
+                    <dxg:GridColumn.EditSettings>
+                        <dxe:TextEditSettings DisplayFormat="N2" />
+                    </dxg:GridColumn.EditSettings>
+                </dxg:GridColumn>
+                <dxg:GridColumn Header="План" Binding="{Binding PlanSum, Mode=TwoWay, Converter={StaticResource StringToDecimalConverter}}">
+                    <dxg:GridColumn.EditSettings>
+                        <dxe:TextEditSettings DisplayFormat="N2" />
+                    </dxg:GridColumn.EditSettings>
+                </dxg:GridColumn>
+
+                <dxg:GridColumn FieldName="InvoiceId" Header="№ СФ">
+                    <dxg:GridColumn.EditSettings>
+                        <dxg:LookUpEditSettings ItemsSource="{Binding Path=(services:DataRepository.Invoices)}" 
+                                                AutoComplete="True" 
+                                                ShowSizeGrip="True" 
+                                                ImmediatePopup="True" 
+                                                IncrementalFiltering="True" 
+                                                AutoPopulateColumns="False" 
+                                                IsPopupAutoWidth="False" 
+                                                DisplayMember="Number"
+                                                ValueMember="Id">
+                            <dxg:LookUpEditSettings.PopupContentTemplate>
+                                <ControlTemplate>
+                                    <dxg:GridControl Name="PART_GridControl">
+                                        <dxg:GridControl.Columns>
+                                            <dxg:GridColumn FieldName="Id" Header="Идентификатор"/>
+                                            <dxg:GridColumn FieldName="Name" Header="наименование"/>
+                                        </dxg:GridControl.Columns>
+                                        <dxg:GridControl.View>
+                                            <dxg:TableView AutoWidth="True" ShowSearchPanelMode="Always"/>
+                                        </dxg:GridControl.View>
+                                    </dxg:GridControl>
+                                </ControlTemplate>
+                            </dxg:LookUpEditSettings.PopupContentTemplate>
+                            <dxg:LookUpEditSettings.StyleSettings>
+                                <dxg:SearchLookUpEditStyleSettings/>
+                            </dxg:LookUpEditSettings.StyleSettings>
+                        </dxg:LookUpEditSettings>
+                    </dxg:GridColumn.EditSettings>
+                </dxg:GridColumn>
+                <dxg:GridColumn FieldName="PaymentMethodId" Header="Способ оплаты">
+                    <dxg:GridColumn.EditSettings>
+                        <dxg:LookUpEditSettings ItemsSource="{Binding Path=(services:DataRepository.PaymentMethods)}" 
+                                                AutoComplete="True" 
+                                                ShowSizeGrip="True" 
+                                                ImmediatePopup="True" 
+                                                IncrementalFiltering="True" 
+                                                AutoPopulateColumns="False" 
+                                                IsPopupAutoWidth="False" 
+                                                DisplayMember="Name"
+                                                ValueMember="Id">
+                            <dxg:LookUpEditSettings.PopupContentTemplate>
+                                <ControlTemplate>
+                                    <dxg:GridControl Name="PART_GridControl">
+                                        <dxg:GridControl.Columns>
+                                            <dxg:GridColumn FieldName="Id" Header="Идентификатор"/>
+                                            <dxg:GridColumn FieldName="Name" Header="наименование"/>
+                                        </dxg:GridControl.Columns>
+                                        <dxg:GridControl.View>
+                                            <dxg:TableView AutoWidth="True" ShowSearchPanelMode="Always"/>
+                                        </dxg:GridControl.View>
+                                    </dxg:GridControl>
+                                </ControlTemplate>
+                            </dxg:LookUpEditSettings.PopupContentTemplate>
+                            <dxg:LookUpEditSettings.StyleSettings>
+                                <dxg:SearchLookUpEditStyleSettings/>
+                            </dxg:LookUpEditSettings.StyleSettings>
+                        </dxg:LookUpEditSettings>
+                    </dxg:GridColumn.EditSettings>
+                </dxg:GridColumn>
+                
+                <dxg:GridColumn Header="Дата документа" Binding="{Binding CompensationDate, Mode=TwoWay, Converter={StaticResource StringToDateTimeConverter}}"  />
+                <dxg:GridColumn Header="Дата компенсации" Binding="{Binding DocumentDateTime, Mode=TwoWay, Converter={StaticResource StringToDateTimeConverter}}"  />
+                <dxg:GridColumn Header="Оригинал" Binding="{Binding HasOriginal, Mode=TwoWay, Converter={StaticResource StringToBoolConverter}}"/>
+                <dxg:GridColumn Header="Скан" Binding="{Binding HasScan, Mode=TwoWay, Converter={StaticResource StringToBoolConverter}}"/>
                 
             </dxg:GridControl.Columns>
             <dxg:GridControl.View>
-                <dxg:TableView Name="view" 
-                               BestFitMode="Smart"
-                               AllowBestFit="True"
-                               BestFitArea="All"
-                               AllowPerPixelScrolling="True" 
-                               ShowGroupPanel="True" 
-                               ShowAutoFilterRow="True"  
-                               AllowEditing="False" 
-                               NavigationStyle="Cell" />
+                <dxg:TableView Name="view">
+                    
+                   <dxmvvm:Interaction.Behaviors>
+                        <dxmvvm:EventToCommand EventName="RowUpdated" Command="{Binding SaveCommand}" PassEventArgsToCommand="False" />
+                        <dxmvvm:EventToCommand EventName="RowCanceled" Command="{Binding CancelCommand}" PassEventArgsToCommand="False"/>
+                    </dxmvvm:Interaction.Behaviors>
+                    
+                </dxg:TableView>
             </dxg:GridControl.View>
         </dxg:GridControl>
     </Grid>

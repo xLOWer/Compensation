@@ -13,6 +13,8 @@
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -87,11 +89,8 @@
     <Compile Include="AppSettings\AppConfig.cs" />
     <Compile Include="AppSettings\AppConfigHandler.cs" />
     <Compile Include="MVVM\Model\Common\AppConfig.cs" />
-    <Compile Include="MVVM\ViewModel\DocumentSingleViewModel.cs" />
-    <Compile Include="MVVM\View\DocumentSingleWindow.xaml.cs">
-      <DependentUpon>DocumentSingleWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Services\CommandService.cs" />
+    <Compile Include="Services\Converters\Converters.cs" />
     <Compile Include="Services\DataRepository.cs" />
     <Compile Include="Services\DbService.cs" />
     <Compile Include="Services\LogService.cs" />
@@ -117,10 +116,6 @@
       <DependentUpon>DocumentListWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="MVVM\View\DocumentSingleWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="MVVM\View\Templates\TemplateResourses.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -3,6 +3,7 @@
                     xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
                     xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
                     xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+                    xmlns:repo="clr-namespace:comp_app.Services"
                     xmlns:local="clr-namespace:comp_app.MVVM.View.Templates">
     
     <ControlTemplate x:Key="statusGridTemplate">    
@@ -89,6 +90,7 @@
                          BorderBrush="Transparent" 
                          BorderThickness="0"
                          />
-    </ControlTemplate>    
-    
+    </ControlTemplate>
+
+
 </ResourceDictionary>

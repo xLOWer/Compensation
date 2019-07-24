@@ -23,7 +23,7 @@ namespace comp_app.Services
             this.execute = execute;
             this.canExecute = canExecute;
         }
-
+        
         public bool CanExecute(object parameter)
         {
             return this.canExecute == null || this.canExecute(parameter);

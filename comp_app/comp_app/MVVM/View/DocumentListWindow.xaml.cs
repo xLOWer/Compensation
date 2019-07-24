@@ -13,10 +13,9 @@ namespace comp_app.MVVM.View
     {
         public DocumentListWindow()
         {
-            InitializeComponent();
-            DevExpress.Xpf.Core.ThemeManager.SetThemeName(this, "VS2017Light");
             this.DataContext = new DocumentListViewModel();
+            DevExpress.Xpf.Core.ThemeManager.SetThemeName(this, "VS2017Light");
+            InitializeComponent();
         }
-
     }
 }
