@@ -1,11 +1,8 @@
 ﻿using comp_app.MVVM.Model;
-using comp_app.MVVM.View;
 using comp_app.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
 
 namespace comp_app.MVVM.ViewModel
 {
@@ -38,6 +35,10 @@ namespace comp_app.MVVM.ViewModel
         public CommandService SaveCommand => new CommandService(Save);
         public CommandService CancelCommand => new CommandService(Cancel);
 
+        public void RowUpdated(object sender, DevExpress.Xpf.Grid.RowEventArgs e)
+        {
+
+        }
 
         public void Save(object o = null)
         {
@@ -68,6 +69,8 @@ namespace comp_app.MVVM.ViewModel
 
         public DocumentListViewModel()
         {
+            DataRepository.Documents = DataGenerator(1000);
+
             DataRepository.Statuses = new List<Status>
             {
                 new Status(){Id="0", Name="Неоплачено" },
@@ -105,101 +108,61 @@ namespace comp_app.MVVM.ViewModel
 
             DataRepository.Invoices = new List<Invoice>
             {
-                new Invoice(){Id="0", Number="6" },
-                new Invoice(){Id="1", Number="1" },
-                new Invoice(){Id="2", Number="2" },
-                new Invoice(){Id="3", Number="3" },
-                new Invoice(){Id="3", Number="4" },
-                new Invoice(){Id="3", Number="5" },
+                new Invoice(){Id="0", Number="документ 6" },
+                new Invoice(){Id="1", Number="документ 1" },
+                new Invoice(){Id="2", Number="документ 2" },
+                new Invoice(){Id="3", Number="документ 3" },
+                new Invoice(){Id="4", Number="документ 4" },
+                new Invoice(){Id="5", Number="документ 5" },
             };
 
             DataRepository.PaymentMethods = new List<PaymentMethod>
             {
-                new PaymentMethod(){Id="0", Name="6" },
-                new PaymentMethod(){Id="1", Name="1" },
-                new PaymentMethod(){Id="2", Name="2" },
-            };
+                new PaymentMethod(){Id="0", Name="вз" },
+                new PaymentMethod(){Id="1", Name="на р/с" }
+            };         
 
-            DataRepository.Documents = new List<Document>
-            {              
 
-            new Document()
-                {
-                    Id = "0",
-                    StatusId ="0",
-                    ClearanceMounth = "01/01/2019",
-                    AccurualMounth =  "01/01/2019",
-                    ProviderId = "0",
-                    CompanyId = "0",
-                    ItemId = "0",
-                    Comments = "транспорт",
-                    FactSum = "1093829,81",
-                    PlanSum = "1093829,81",
-                    CompensationDate = "",
-                    InvoiceId = "",
-                    DocumentDateTime = "",
-                    PaymentMethodId = "",
-                    HasOriginal = "0",
-                    HasScan = "0"
-                },
-                new Document()
-                {
-                    Id = "1",
-                    StatusId ="1",
-                    ClearanceMounth ="01/01/2019",
-                    AccurualMounth = "01/01/2019",
-                    ProviderId = "0",
-                    CompanyId = "0",
-                    ItemId = "1",
-                    Comments = "BMC",
-                    FactSum = "2103308,49",
-                    PlanSum = "2103308,49",
-                    CompensationDate = new DateTime(2019, 04, 02).ToString(),
-                    InvoiceId = "0",
-                    DocumentDateTime = new DateTime(2019, 01, 31).ToString(),
-                    PaymentMethodId = "0",
-                    HasOriginal = "1",
-                    HasScan = "0"
-                },
-                new Document()
-                {
-                    Id = "2",
-                    StatusId ="1",
-                    ClearanceMounth ="01/01/2019",
-                    AccurualMounth = "01/01/2019",
-                    ProviderId = "2",
-                    CompanyId = "1",
-                    ItemId = "2",
-                    Comments = "BMC",
-                    FactSum = "53588,56",
-                    PlanSum = "53588,56",
-                    CompensationDate = new DateTime(2019, 04, 02).ToString(),
-                    InvoiceId = "0",
-                    DocumentDateTime = new DateTime(2019, 01, 31).ToString(),
-                    PaymentMethodId = "0",
-                    HasOriginal = "1",
-                    HasScan = "0"
-                },
-                new Document()
-                {
-                    Id = "3",
-                    StatusId ="1",
-                    ClearanceMounth ="01/02/2019",
-                    AccurualMounth = "01/02/2019",
-                    ProviderId = "0",
-                    CompanyId = "0",
-                    ItemId = "3",
-                    Comments = "пермия BMC Прилож4А",
-                    FactSum = "1128555,83",
-                    PlanSum = "53588,56",
-                    CompensationDate = new DateTime(2019, 04, 02).ToString(),
-                    InvoiceId = "",
-                    DocumentDateTime = "",
-                    PaymentMethodId = "0",
-                    HasOriginal = "1",
-                    HasScan = "0"
-                },
-            };
         }
+
+        private List<Document> DataGenerator(int n)
+        {
+            Random r = new Random();            
+            var list = new List<Document>();
+
+            for (int i = 0; i <= n; ++i)
+            {
+                DateTime date = DateTime.Now;
+                try
+                {
+                    date = DateTime.Parse($"{r.Next(10, 30).ToString()}.0{r.Next(1, 9).ToString()}.201{r.Next(3, 9).ToString()}");
+                }
+                catch (Exception ex) { }
+                var sum = (r.NextDouble() * 1000).ToString();
+                list.Add(new Document()
+                {
+                    Id = i.ToString(),
+                    StatusId = r.Next(0, 3).ToString(),
+                    ClearanceMounth = date.ToString(),
+                    AccurualMounth = date.ToString(),
+                    ProviderId = r.Next(0, 6).ToString(),
+                    CompanyId = r.Next(0, 3).ToString(),
+                    ItemId = r.Next(0, 3).ToString(),
+                    Comments = "Comments",
+                    FactSum = sum,
+                    PlanSum = sum,
+                    CompensationDate = date.ToString(),
+                    InvoiceId = r.Next(0, 5).ToString(),
+                    DocumentDateTime = date.ToString(),
+                    PaymentMethodId = (r.Next(1, 2)-1).ToString(),
+                    HasOriginal = r.Next(0, 3) == 0 ? "False" : "True",
+                    HasScan = r.Next(0, 3) == 0 ? "False" : "True"
+                });
+            }
+            return list;
+        }
+        
+
+
     }
 }
