@@ -1,0 +1,64 @@
+﻿<Window x:Class="comp_app.MVVM.View.DocumentSingleWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+        xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+        xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+        xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"  
+        xmlns:lc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"  
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:comp_app.MVVM.View"
+        mc:Ignorable="d"
+        Title="DocumentSingleWindow" Height="450" Width="800">
+    <lc:LayoutControl Orientation="Vertical">
+        
+        <lc:LayoutGroup Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Header="Шапка документа">       
+            <lc:LayoutItem Label="Поставщик">
+                <dxe:TextEdit/>
+            </lc:LayoutItem>
+            <lc:LayoutItem Label="Компания">
+                <dxe:TextEdit/>
+            </lc:LayoutItem>   
+        </lc:LayoutGroup>
+
+        <lc:LayoutGroup Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Header="Шапка документа">
+            <lc:LayoutItem Label="Месяц начисления">
+                <dxe:TextEdit/>
+            </lc:LayoutItem>
+            <lc:LayoutItem Label="Месяц оформления">
+                <dxe:TextEdit/>
+            </lc:LayoutItem>
+        </lc:LayoutGroup>
+
+        <lc:LayoutGroup Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Header="Шапка документа">
+            <lc:LayoutItem Label="План. дата поступления ДС">
+                <dxe:TextEdit/>
+            </lc:LayoutItem>
+            <lc:LayoutItem Label="Оригинал">
+                <dxe:TextEdit/>
+            </lc:LayoutItem>
+        </lc:LayoutGroup>
+
+        <lc:LayoutItem Label="Комментарий">
+            <dxe:TextEdit/>
+        </lc:LayoutItem>
+
+        <lc:LayoutGroup Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Header="Шапка документа">
+            <lc:LayoutItem Label="Приложенная СФ">
+                <dxe:TextEdit/>
+            </lc:LayoutItem>
+            <lc:LayoutItem Label="Файл">
+                <dxe:TextEdit/>
+            </lc:LayoutItem>
+        </lc:LayoutGroup>
+
+
+        <lc:LayoutItem Label="Расчёты">
+            <dxg:GridControl>
+                <:
+            </dxg:GridControl>
+        </lc:LayoutItem>
+
+    </lc:LayoutControl>
+</Window>

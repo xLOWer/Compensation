@@ -298,8 +298,7 @@
                                EditFormPostConfirmation="YesNoCancel" 
                                EditFormShowMode="InlineHideRow" 
                                NavigationStyle="Row"
-                               ShowGroupPanel="True"
-                               ShowTotalSummary="True">
+                               ShowGroupPanel="True">
                     <dxmvvm:Interaction.Behaviors>
                         <dxmvvm:EventToCommand EventName="RowUpdated" Command="{Binding SaveCommand}" PassEventArgsToCommand="False" />
                     </dxmvvm:Interaction.Behaviors>

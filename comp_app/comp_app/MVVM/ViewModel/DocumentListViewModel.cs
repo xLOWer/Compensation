@@ -1,4 +1,5 @@
 ﻿using comp_app.MVVM.Model;
+using comp_app.MVVM.View;
 using comp_app.Services;
 using System;
 using System.Collections.Generic;
@@ -8,12 +9,12 @@ namespace comp_app.MVVM.ViewModel
 {
     public class DocumentListViewModel : INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void NotifyPropertyChanged(string info)
+        public DocumentListViewModel()
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
+            DataRepository.Documents = DataGenerator(20);
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
         private Document selectedDocument;
         public Document SelectedDocument {
             get
@@ -32,98 +33,30 @@ namespace comp_app.MVVM.ViewModel
         public CommandService RefreshCommand => new CommandService(Refresh);
         public CommandService EditCommand => new CommandService(Edit);
         public CommandService AddNewCommand => new CommandService(AddNew);
-        public CommandService SaveCommand => new CommandService(Save);
-        public CommandService CancelCommand => new CommandService(Cancel);
+
+
+        protected void NotifyPropertyChanged(string info)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
+        }
 
         public void RowUpdated(object sender, DevExpress.Xpf.Grid.RowEventArgs e)
-        {
-
-        }
-
-        public void Save(object o = null)
-        {
-            var d = SelectedDocument;
-        }
-
-        public void Cancel(object o = null)
-        {
-        }
+        {        }
 
         public void Delete(object o = null)
-        {
+        {        }
 
-        }
         public void Refresh(object o = null)
-        {
-
-        }
+        {        }
 
         public void Edit(object o = null)
-        {
+        {            
+            DocumentSingleWindow single = new DocumentSingleWindow(SelectedDocument);
+            single.Show();
         }
 
         public void AddNew(object o = null)
-        {
-        }
-
-
-        public DocumentListViewModel()
-        {
-            DataRepository.Documents = DataGenerator(1000);
-
-            DataRepository.Statuses = new List<Status>
-            {
-                new Status(){Id="0", Name="Неоплачено" },
-                new Status(){Id="1", Name="Оплачено" },
-                new Status(){Id="2", Name="Брак" },
-                new Status(){Id="3", Name="Неизвестно" },
-            };
-
-            DataRepository.Providers = new List<Provider>
-            {
-                new Provider(){ Id="0", Name="Шварцкопф" },
-                new Provider(){ Id="1", Name="Колгейт" },
-                new Provider(){ Id="2", Name="Джонсон-с" },
-                new Provider(){ Id="3", Name="ЭсСиДжонсон" },
-                new Provider(){ Id="4", Name="Бенкизер" },
-                new Provider(){ Id="5", Name="Хайджин" },
-                new Provider(){ Id="6", Name="СХЗ" },
-            };
-
-            DataRepository.Companies = new List<Company>
-            {
-                new Company(){Id="0", Name="ВИП" },
-                new Company(){Id="1", Name="Вламур" },
-                new Company(){Id="2", Name="ВИРЭЙ-ТМ" },
-                new Company(){Id="3", Name="Владист" },
-            };
-
-            DataRepository.Items = new List<Item>
-            {
-                new Item(){Id="0", Name="Транспорт" },
-                new Item(){Id="1", Name="Промо" },
-                new Item(){Id="2", Name="Зарплата" },
-                new Item(){Id="3", Name="Ретро" },
-            };
-
-            DataRepository.Invoices = new List<Invoice>
-            {
-                new Invoice(){Id="0", Number="документ 6" },
-                new Invoice(){Id="1", Number="документ 1" },
-                new Invoice(){Id="2", Number="документ 2" },
-                new Invoice(){Id="3", Number="документ 3" },
-                new Invoice(){Id="4", Number="документ 4" },
-                new Invoice(){Id="5", Number="документ 5" },
-            };
-
-            DataRepository.PaymentMethods = new List<PaymentMethod>
-            {
-                new PaymentMethod(){Id="0", Name="вз" },
-                new PaymentMethod(){Id="1", Name="на р/с" }
-            };         
-
-
-        }
+        {        }
 
         private List<Document> DataGenerator(int n)
         {
@@ -162,7 +95,6 @@ namespace comp_app.MVVM.ViewModel
             return list;
         }
         
-
 
     }
 }

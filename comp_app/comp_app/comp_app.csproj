@@ -63,6 +63,14 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\DevExpress 18.1\Components\Bin\Framework\DevExpress.Xpf.Grid.v18.1.Extensions.dll</HintPath>
     </Reference>
+    <Reference Include="DevExpress.Xpf.Layout.v18.1.Core, Version=18.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\DevExpress 18.1\Components\Bin\Framework\DevExpress.Xpf.Layout.v18.1.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Xpf.LayoutControl.v18.1, Version=18.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\DevExpress 18.1\Components\Bin\Framework\DevExpress.Xpf.LayoutControl.v18.1.dll</HintPath>
+    </Reference>
     <Reference Include="DevExpress.Xpf.Themes.VS2017Light.v18.1, Version=18.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\DevExpress 18.1\Components\Bin\Framework\DevExpress.Xpf.Themes.VS2017Light.v18.1.dll</HintPath>
@@ -89,6 +97,10 @@
     <Compile Include="AppSettings\AppConfig.cs" />
     <Compile Include="AppSettings\AppConfigHandler.cs" />
     <Compile Include="MVVM\Model\Common\AppConfig.cs" />
+    <Compile Include="MVVM\ViewModel\DocumentSingleViewModel.cs" />
+    <Compile Include="MVVM\View\DocumentSingleWindow.xaml.cs">
+      <DependentUpon>DocumentSingleWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Services\CommandService.cs" />
     <Compile Include="Services\Converters\Converters.cs" />
     <Compile Include="Services\DataRepository.cs" />
@@ -116,6 +128,10 @@
       <DependentUpon>DocumentListWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="MVVM\View\DocumentSingleWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MVVM\View\Templates\TemplateResourses.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
