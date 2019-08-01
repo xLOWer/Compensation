@@ -1,9 +1,10 @@
-﻿using System;
+﻿using comp_app.MVVM.Model.Common;
+using System;
 using System.Collections.Generic;
 
 namespace comp_app.MVVM.Model
 {
-    public class Document
+    public class Document : IRef
     {
         public Document()
         {
@@ -11,6 +12,7 @@ namespace comp_app.MVVM.Model
         }
 
         public string Id { get; set; }
+        public string Name { get; set; }
         public string StatusId { get; set; } // статус
         public string ClearanceMounth { get; set; } // Месяц оформления
         public string AccurualMounth { get; set; } // Месяц начислений

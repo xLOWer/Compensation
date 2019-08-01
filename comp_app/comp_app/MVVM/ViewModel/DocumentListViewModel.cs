@@ -1,20 +1,21 @@
 ﻿using comp_app.MVVM.Model;
 using comp_app.MVVM.View;
+using comp_app.MVVM.ViewModel.Common;
 using comp_app.Services;
+using comp_app.Services.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace comp_app.MVVM.ViewModel
 {
-    public class DocumentListViewModel : INotifyPropertyChanged
+    public class DocumentListViewModel : ViewModelBase<Document>, IListViewModel<Document>
     {
         public DocumentListViewModel()
         {
-            DataRepository.Documents = DataGenerator(20);
+            DataRepository.Documents = new GenericRepository<Document>(DataGenerator(50));
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
         private Document selectedDocument;
         public Document SelectedDocument {
             get
@@ -29,34 +30,35 @@ namespace comp_app.MVVM.ViewModel
         }
         //object sender, DevExpress.Xpf.Grid.RowEventArgs e
 
-        public CommandService DeleteCommand => new CommandService(Delete);
-        public CommandService RefreshCommand => new CommandService(Refresh);
         public CommandService EditCommand => new CommandService(Edit);
         public CommandService AddNewCommand => new CommandService(AddNew);
 
-
-        protected void NotifyPropertyChanged(string info)
+        public override void Delete(object o = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
+            DataRepository.Documents.Remove(SelectedDocument, (s) =>
+            {
+                // код удаления
+                return false;
+            });
+            
         }
 
-        public void RowUpdated(object sender, DevExpress.Xpf.Grid.RowEventArgs e)
-        {        }
-
-        public void Delete(object o = null)
-        {        }
-
-        public void Refresh(object o = null)
+        public override void Refresh(object o = null)
         {        }
 
         public void Edit(object o = null)
         {            
             DocumentSingleWindow single = new DocumentSingleWindow(SelectedDocument);
+            single.Activate();
             single.Show();
         }
 
         public void AddNew(object o = null)
-        {        }
+        {
+            DocumentSingleWindow single = new DocumentSingleWindow(new Document());
+            single.Activate();
+            single.Show();
+        }
 
         private List<Document> DataGenerator(int n)
         {

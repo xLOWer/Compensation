@@ -16,11 +16,11 @@ namespace comp_app.AppSettings
         
         public static void ConfigureOracle()
         {
-            LogService.Log("[OracleConnectionService]");
-            try { OracleConnectionService.Configure(); }
+            Utilites.Logger.Log("[OracleConnectionService]");
+            try { DbService.Connection.Configure(); }
             catch (Exception ex) { Utilites.Error(ex); }
-            LogService.Log("\t\tClientVersion " + OracleConnectionService.conn.ClientVersion);
-            LogService.Log("\t\tServer " + OracleConnectionService.conn.Server);
+            Utilites.Logger.Log("\t\tClientVersion " + DbService.Connection.conn.ClientVersion);
+            Utilites.Logger.Log("\t\tServer " + DbService.Connection.conn.Server);
         }
 
         public static void Load()
@@ -33,7 +33,7 @@ namespace comp_app.AppSettings
 
             Read();
 
-            LogService.Log($"\t\tconf_dir {directoryPath}\\{dirName}");
+            Utilites.Logger.Log($"\t\tconf_dir {directoryPath}\\{dirName}");
         }
 
 
@@ -45,7 +45,7 @@ namespace comp_app.AppSettings
 
         public static void Read()
         {
-            LogService.Log("[APPCONFIG]");
+            Utilites.Logger.Log("[APPCONFIG]");
             var newLoadedConfig = new MVVM.Model.Common.AppConfig();
             XmlSerializer xml = new XmlSerializer(typeof(MVVM.Model.Common.AppConfig));
             using (var stream = XmlReader.Create(fullPath))
@@ -69,8 +69,8 @@ namespace comp_app.AppSettings
             AppConfig.ProxyUserPassword = !string.IsNullOrEmpty(newLoadedConfig.ProxyUserPassword) ? newLoadedConfig.ProxyUserPassword : AppConfig.ProxyUserPassword;
 
 
-            LogService.Log("\t\tDbUserName " + AppConfig.DbUserName);
-            LogService.Log("\t\tDbHost " + AppConfig.DbHost);
+            Utilites.Logger.Log("\t\tDbUserName " + AppConfig.DbUserName);
+            Utilites.Logger.Log("\t\tDbHost " + AppConfig.DbHost);
         }
 
 

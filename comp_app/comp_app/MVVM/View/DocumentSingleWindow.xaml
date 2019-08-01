@@ -11,52 +11,90 @@
         xmlns:local="clr-namespace:comp_app.MVVM.View"
         mc:Ignorable="d"
         Title="DocumentSingleWindow" Height="450" Width="800">
+    
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Templates/TemplateResourses.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    
     <lc:LayoutControl Orientation="Vertical">
-        
-        <lc:LayoutGroup Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Header="Шапка документа">       
-            <lc:LayoutItem Label="Поставщик">
-                <dxe:TextEdit/>
-            </lc:LayoutItem>
-            <lc:LayoutItem Label="Компания">
-                <dxe:TextEdit/>
-            </lc:LayoutItem>   
+
+        <lc:LayoutGroup Orientation="Horizontal" Height="32">
+            
+            <dx:SimpleButton Template="{StaticResource buttonTamplate}" Glyph="../../Images/save.png" Content="Сохранить">
+                <dxmvvm:Interaction.Behaviors>
+                    <dxmvvm:EventToCommand EventName="Click" Command="{Binding SaveCommand}" PassEventArgsToCommand="False"/>
+                </dxmvvm:Interaction.Behaviors>
+            </dx:SimpleButton>
+
+            <dx:SimpleButton Template="{StaticResource buttonTamplate}" Glyph="../../Images/esc.png" Content="Отменить">
+                <dxmvvm:Interaction.Behaviors>
+                    <dxmvvm:EventToCommand EventName="Click" Command="{Binding CancelCommand}" PassEventArgsToCommand="False"/>
+                </dxmvvm:Interaction.Behaviors>
+            </dx:SimpleButton>
+
+            <dx:SimpleButton Template="{StaticResource buttonTamplate}" Glyph="../../Images/del.png" Content="Удалить">
+                <dxmvvm:Interaction.Behaviors>
+                    <dxmvvm:EventToCommand EventName="Click" Command="{Binding DeleteCommand}" PassEventArgsToCommand="False"/>
+                </dxmvvm:Interaction.Behaviors>
+            </dx:SimpleButton>
+            
         </lc:LayoutGroup>
 
-        <lc:LayoutGroup Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Header="Шапка документа">
-            <lc:LayoutItem Label="Месяц начисления">
-                <dxe:TextEdit/>
-            </lc:LayoutItem>
-            <lc:LayoutItem Label="Месяц оформления">
-                <dxe:TextEdit/>
-            </lc:LayoutItem>
-        </lc:LayoutGroup>
+        <lc:LayoutItem Label="Поставщик">
+            <dxe:TextEdit Text="{Binding Document.ProviderId}"/>
+        </lc:LayoutItem>
 
-        <lc:LayoutGroup Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Header="Шапка документа">
-            <lc:LayoutItem Label="План. дата поступления ДС">
-                <dxe:TextEdit/>
-            </lc:LayoutItem>
-            <lc:LayoutItem Label="Оригинал">
-                <dxe:TextEdit/>
-            </lc:LayoutItem>
-        </lc:LayoutGroup>
+        <lc:LayoutItem Label="Компания">
+            <dxe:TextEdit Text="{Binding Document.CompanyId}"/>
+        </lc:LayoutItem>
+
+        <lc:LayoutItem Label="Месяц начисления">
+            <dxe:TextEdit Text="{Binding Document.CompanyId}"/>
+        </lc:LayoutItem>
+
+        <lc:LayoutItem Label="Месяц оформления">
+            <dxe:TextEdit Text="{Binding Document.CompanyId}"/>
+        </lc:LayoutItem>
+
+        <lc:LayoutItem Label="План. дата поступления ДС">
+            <dxe:TextEdit Text="{Binding Document.CompanyId}"/>
+        </lc:LayoutItem>
+
+        <lc:LayoutItem Label="Оригинал">
+            <dxe:CheckEdit Content="{Binding Document.HasOriginal}"/>
+        </lc:LayoutItem>
 
         <lc:LayoutItem Label="Комментарий">
+            <dxe:TextEdit Text="{Binding Document.Comments}"/>
+        </lc:LayoutItem>
+
+        <lc:LayoutItem Label="Приложенная СФ">
+            <dxe:TextEdit Text="{Binding Document.InvoiceId}"/>
+        </lc:LayoutItem>
+
+        <lc:LayoutItem Label="Файл">
             <dxe:TextEdit/>
         </lc:LayoutItem>
 
-        <lc:LayoutGroup Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch" Header="Шапка документа">
-            <lc:LayoutItem Label="Приложенная СФ">
-                <dxe:TextEdit/>
-            </lc:LayoutItem>
-            <lc:LayoutItem Label="Файл">
-                <dxe:TextEdit/>
-            </lc:LayoutItem>
-        </lc:LayoutGroup>
-
-
-        <lc:LayoutItem Label="Расчёты">
+        <lc:LayoutItem Label="Расчёты" Height="150">
             <dxg:GridControl>
-                <:
+                <dxg:GridControl.Columns>
+                    <dxg:GridColumn Header="Id"/>
+                    <dxg:GridColumn Header="Дата"/>
+                    <dxg:GridColumn Header="Сумма"/>
+                    <dxg:GridColumn Header="Способ оплаты"/>
+                </dxg:GridControl.Columns>
+                <dxg:GridControl.View>
+                    <dxg:TableView Name="view" 
+                               AllowEditing="False" 
+                               BestFitMode="AllRows"    
+                               NavigationStyle="Row"
+                               ShowGroupPanel="True"/>
+                </dxg:GridControl.View>
             </dxg:GridControl>
         </lc:LayoutItem>
 

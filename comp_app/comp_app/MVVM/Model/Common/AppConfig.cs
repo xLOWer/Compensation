@@ -23,20 +23,7 @@
         public string DbPort { get; set; }
         public string DbSID { get; set; } 
         public string DbHost { get; set; }
-
-        public string TraderUserName { get; set; }
-        public string TraderUserPassword { get; set; }
-
-        public int? EdiTimeout { get; set; } 
-        public string EdiUser { get; set; }
-        public string EdiPassword { get; set; } 
-        public string EdiGLN { get; set; } 
-        public string EdiEmail { get; set; }
-        public string EdiUrl { get; set; } 
-
-        public bool? EnableAutoHandler { get; set; }
-        public int? AutoHandlerPeriod { get; set; } 
-
+                
         public bool? EnableLogging { get; set; } 
 
         public string Schema { get; set; }

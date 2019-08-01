@@ -97,18 +97,21 @@
     <Compile Include="AppSettings\AppConfig.cs" />
     <Compile Include="AppSettings\AppConfigHandler.cs" />
     <Compile Include="MVVM\Model\Common\AppConfig.cs" />
+    <Compile Include="MVVM\Model\Common\IRef.cs" />
+    <Compile Include="MVVM\ViewModel\Common\IListViewModel.cs" />
+    <Compile Include="MVVM\ViewModel\Common\ISingleViewModel.cs" />
+    <Compile Include="MVVM\ViewModel\Common\ViewModelBase.cs" />
     <Compile Include="MVVM\ViewModel\DocumentSingleViewModel.cs" />
+    <Compile Include="MVVM\ViewModel\Common\IViewModel.cs" />
     <Compile Include="MVVM\View\DocumentSingleWindow.xaml.cs">
       <DependentUpon>DocumentSingleWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\CommandService.cs" />
+    <Compile Include="Services\Common\IGenericRepository.cs" />
+    <Compile Include="Services\Common\GenericRepository.cs" />
     <Compile Include="Services\Converters\Converters.cs" />
     <Compile Include="Services\DataRepository.cs" />
     <Compile Include="Services\DbService.cs" />
-    <Compile Include="Services\LogService.cs" />
-    <Compile Include="Services\OracleConnectionService.cs" />
-    <Compile Include="Services\PropertyChangedBase.cs" />
-    <Compile Include="Services\SqlService.cs" />
     <Compile Include="Services\Utilites.cs" />
     <Page Include="MVVM\View\DocumentListWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -157,6 +160,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="ClassDiagram1.cd" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -181,5 +185,6 @@
   <ItemGroup>
     <Resource Include="Images\esc.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

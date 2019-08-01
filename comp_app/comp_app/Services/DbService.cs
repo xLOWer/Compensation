@@ -4,6 +4,11 @@ using System.Linq;
 using System.Reflection;
 using Devart.Data.Oracle;
 using System.Collections.Generic;
+using comp_app.AppSettings;
+using System.Windows;
+using DevExpress.Xpf.Core;
+using comp_app.MVVM.Model.Common;
+using comp_app.MVVM.Model;
 
 namespace comp_app.Services
 {
@@ -15,24 +20,23 @@ namespace comp_app.Services
         /// <param name="commands">Команды</param>
         internal static void ExecuteCommand(List<OracleCommand> commands)
         {
-            LogService.Log($"[ORCL] {MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
-            LogService.Log("\t\tcount=" + commands.Count.ToString());
+            Utilites.Logger.Log($"[ORCL] {MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
+            Utilites.Logger.Log("\t\tcount=" + commands.Count.ToString());
             foreach (var command in commands)
             {
-                command.Connection = OracleConnectionService.conn;
-                OracleConnectionService.Check();
+                command.Connection = Connection.conn;
+                Connection.Check();
                 command.ExecuteNonQuery();
             }
         }
-
-
+        
         internal static void ExecuteCommand(OracleCommand command)
         {
-            LogService.Log($"[ORCL] {MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
+            Utilites.Logger.Log($"[ORCL] {MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
             using (command)
             {
-                OracleConnectionService.Check();
-                command.Connection = OracleConnectionService.conn;
+                Connection.Check();
+                command.Connection = Connection.conn;
                 var res = command.ExecuteNonQuery();                
             }
         }
@@ -43,13 +47,13 @@ namespace comp_app.Services
         /// <returns>DataTable с резльтатом запроса</returns>
         internal static DataTable Select(string Sql)
         {
-            LogService.Log($"[ORCL] {MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
+            Utilites.Logger.Log($"[ORCL] {MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
             DataTable DataGridItems = ObjToDataTable(typeof(string));
             using (OracleCommand command = new OracleCommand())
             {
-                command.Connection = OracleConnectionService.conn;
-                OracleConnectionService.Check();
-                OracleDataAdapter adapter = new OracleDataAdapter(Sql, OracleConnectionService.conn);
+                command.Connection = Connection.conn;
+                Connection.Check();
+                OracleDataAdapter adapter = new OracleDataAdapter(Sql, Connection.conn);
                 OracleCommandBuilder builder = new OracleCommandBuilder(adapter);
                 DataGridItems.Clear();
                 adapter.Fill(DataGridItems);
@@ -60,11 +64,11 @@ namespace comp_app.Services
 
         internal static void Insert(string Sql)
         {
-            LogService.Log($"[ORCL] {MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
+            Utilites.Logger.Log($"[ORCL] {MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
             using (OracleCommand command = new OracleCommand(Sql))
             {
-                command.Connection = OracleConnectionService.conn;
-                OracleConnectionService.Check();
+                command.Connection = Connection.conn;
+                Connection.Check();
                 command.ExecuteNonQuery();
                 
             }
@@ -72,39 +76,38 @@ namespace comp_app.Services
 
         internal static void Insert(List<string> Sqls)
         {
-            LogService.Log($"[ORCL] {MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
+            Utilites.Logger.Log($"[ORCL] {MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
             int c = Sqls.Count();
             for (int i = 1; i <= c; ++i)
             {
                 using (OracleCommand command = new OracleCommand(Sqls[i - 1]))
                 {
-                    command.Connection = OracleConnectionService.conn;
-                    OracleConnectionService.Check();
+                    command.Connection = Connection.conn;
+                    Connection.Check();
                     command.ExecuteNonQuery();
                     
                 }
             }
-
         }
 
         internal static string SelectSingleValue(string Sql)
         {
-            LogService.Log($"[ORCL] {MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
+            Utilites.Logger.Log($"[ORCL] {MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
             OracleDataReader reader;
             string retVal = "";
             using (OracleCommand command = new OracleCommand())
             {
-                command.Connection = OracleConnectionService.conn;
+                command.Connection = Connection.conn;
                 command.CommandType = CommandType.Text;
                 command.CommandText = Sql;
-                OracleConnectionService.conn.Open();
+                Connection.conn.Open();
                 reader = command.ExecuteReader();
 
                 while (reader.Read())
                 {
                     retVal = reader[0].ToString();
                 }
-                OracleConnectionService.conn.Close();
+                Connection.conn.Close();
             }
             return retVal;
         }
@@ -117,21 +120,88 @@ namespace comp_app.Services
             dt.AcceptChanges();
             return dt;
         }
+        
+        internal static class Sqls
+        {
+            internal static string DatesBetween(DateTime Date)
+                => $" BETWEEN {OracleDateFormat(Date)} AND {OracleDateFormat(Date)} ";
+
+            internal static string DatesBetween(DateTime DateFrom, DateTime DateTo)
+                => $" BETWEEN {OracleDateFormat(DateFrom)} AND {OracleDateFormat(DateTo)} ";
+
+            internal static string OracleDateFormat(DateTime Date) => $" TO_DATE('{Date.Day}/{Date.Month}/{Date.Year}','DD/MM/YYYY') ";
+
+            internal static string Sql_DateRange(string tableName, string fieldName, string sign, DateTime date1)
+                => $"{tableName}.{fieldName} = {OracleDateFormat(date1)}\n";
+
+            internal static string Sql_DateRange(string shortTableName, string fieldName, string sign, DateTime date1, DateTime date2)
+                => $"{shortTableName}.{fieldName} {DatesBetween(date1, date2)}\n";
+
+            internal static string ToOracleDate(DateTime Date)
+            {
+                var day = Date.Day < 10 ? $"0{Date.Day}" : Date.Day.ToString();
+                var mouth = Date.Month < 10 ? $"0{Date.Month}" : Date.Month.ToString();
+                return $"{day}.{mouth}. {Date.Year} {Date.Hour}:{Date.Minute}:{Date.Second}";
+            }
+
+            internal static string GET_FAILED_DETAILS(string SENDER_ILN) =>
+                $"SELECT * FROM {(AppSettings.AppConfig.Schema + ".")}EDI_GET_FAILED_DETAILS WHERE SENDER_ILN={SENDER_ILN}";
+
+            internal static string Remove(string Id, Document o = null) => "delete documents where id=1";
+            internal static string Remove(string Id, Company o = null) => "delete companies where id=1";
+
+            internal static string Create(Document o) => "insert into documents() values()";
+            internal static string Create(Company o) => "insert into companies() values()";
+
+            internal static string Update(Document o, string Id) => "update documents set 1=1 where id=1";
+            internal static string Update(Company o, string Id) => "update companies set 1=1 where id=1";       
+        }
+
+        public static class Connection
+        {
+            internal static OracleConnection conn { get; set; }
+            public static string Timeout => conn?.ConnectionTimeout.ToString() ?? "ошибка";
+
+            internal static void Configure()
+            {
+                if (!string.IsNullOrEmpty(AppSettings.AppConfig.connString) ||
+                    !String.IsNullOrEmpty(AppSettings.AppConfig.DbUserName) ||
+                    !String.IsNullOrEmpty(AppSettings.AppConfig.DbUserPassword) ||
+                    !String.IsNullOrEmpty(AppSettings.AppConfig.DbSID) ||
+                    !String.IsNullOrEmpty(AppSettings.AppConfig.DbPort) ||
+                    !String.IsNullOrEmpty(AppSettings.AppConfig.DbHost))
+                {
+                    conn = new OracleConnection(AppSettings.AppConfig.connString);
+                }
+                else
+                    DXMessageBox.Show("Соединение с базой не создано. Не верные параметры в строке соединения");
+            }
+
+            internal static void Open() => conn.Open();
+            internal static void Close() => conn.Close();
+
+            internal static void Check()
+            {
+                if (conn.State != System.Data.ConnectionState.Open)
+                    conn.Open();
+            }
+
+        }
     }
 
     internal static partial class DbService<TModel>
     {
         internal static List<TModel> DocumentSelect(string Sql)
         {
-            LogService.Log($"[ORCL] {MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
-            LogService.Log("\t\t"+Sql);
+            Utilites.Logger.Log($"[ORCL] {MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
+            Utilites.Logger.Log("\t\t"+Sql);
             List<TModel> Documents = new List<TModel>();
             DataTable DataGridItems = ObjToDataTable(typeof(TModel));
             using (OracleCommand command = new OracleCommand())
             {
-                command.Connection = OracleConnectionService.conn;
-                OracleConnectionService.Check();
-                OracleDataAdapter adapter = new OracleDataAdapter(Sql, OracleConnectionService.conn);
+                command.Connection = DbService.Connection.conn;
+                DbService.Connection.Check();
+                OracleDataAdapter adapter = new OracleDataAdapter(Sql, DbService.Connection.conn);
                 DataGridItems.Clear();
                 adapter.Fill(DataGridItems);
             }
@@ -184,17 +254,17 @@ namespace comp_app.Services
 
         internal static List<TModel> DocumentSelect(List<string> Sqls)
         {
-            LogService.Log($"[ORCL] {MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
-            LogService.Log("\t\tSqls.Count=" + Sqls.Count.ToString());
+            Utilites.Logger.Log($"[ORCL] {MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
+            Utilites.Logger.Log("\t\tSqls.Count=" + Sqls.Count.ToString());
             List<TModel> Documents = new List<TModel>();
             DataTable DataGridItems = ObjToDataTable(typeof(TModel));
             using (OracleCommand command = new OracleCommand())
             {
                 foreach (var Sql in Sqls)
                 {
-                    command.Connection = OracleConnectionService.conn;
-                    OracleConnectionService.Check();
-                    OracleDataAdapter adapter = new OracleDataAdapter(Sql, OracleConnectionService.conn);
+                    command.Connection = DbService.Connection.conn;
+                    DbService.Connection.Check();
+                    OracleDataAdapter adapter = new OracleDataAdapter(Sql, DbService.Connection.conn);
                     OracleCommandBuilder builder = new OracleCommandBuilder(adapter);
                     DataGridItems.Clear();
                     adapter.Fill(DataGridItems);
@@ -207,4 +277,5 @@ namespace comp_app.Services
 
 
     }
+
 }

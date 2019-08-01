@@ -25,6 +25,7 @@
             <conv:StringToDecimalConverter x:Key="StringToDecimalConverter"/>
         </ResourceDictionary>
     </Window.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="32"/>
@@ -32,10 +33,31 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" Orientation="Horizontal">
-            <dx:SimpleButton Template="{StaticResource buttonTamplate}" Glyph="../../Images/refresh.png" Command="{Binding RefreshCommand}">Обновить</dx:SimpleButton>
-            <dx:SimpleButton Template="{StaticResource buttonTamplate}" Glyph="../../Images/add.png" Command="{Binding AddNewCommand}">Добавить</dx:SimpleButton>
-            <dx:SimpleButton Template="{StaticResource buttonTamplate}" Glyph="../../Images/del.png" Command="{Binding DeleteCommand}">Удалить</dx:SimpleButton>
-            <dx:SimpleButton Template="{StaticResource buttonTamplate}" Glyph="../../Images/edit.png" Command="{Binding EditCommand}">Редакировать</dx:SimpleButton>
+            
+            <dx:SimpleButton Template="{StaticResource buttonTamplate}" Glyph="../../Images/refresh.png" Content="Обновить">
+                <dxmvvm:Interaction.Behaviors>
+                    <dxmvvm:EventToCommand EventName="Click" Command="{Binding RefreshCommand}" PassEventArgsToCommand="False"/>
+                </dxmvvm:Interaction.Behaviors>
+            </dx:SimpleButton>
+            
+            <dx:SimpleButton Template="{StaticResource buttonTamplate}" Glyph="../../Images/add.png" Content="Добавить">
+                <dxmvvm:Interaction.Behaviors>
+                    <dxmvvm:EventToCommand EventName="Click" Command="{Binding AddNewCommand}" PassEventArgsToCommand="False"/>
+                </dxmvvm:Interaction.Behaviors>
+            </dx:SimpleButton>
+
+            <dx:SimpleButton Template="{StaticResource buttonTamplate}" Glyph="../../Images/del.png" Content="Удалить">
+                <dxmvvm:Interaction.Behaviors>
+                    <dxmvvm:EventToCommand EventName="Click" Command="{Binding DeleteCommand}" PassEventArgsToCommand="False"/>
+                </dxmvvm:Interaction.Behaviors>
+            </dx:SimpleButton>
+
+            <dx:SimpleButton Template="{StaticResource buttonTamplate}" Glyph="../../Images/edit.png" Content="Редакировать">
+                <dxmvvm:Interaction.Behaviors>
+                    <dxmvvm:EventToCommand EventName="Click" Command="{Binding EditCommand}" PassEventArgsToCommand="False"/>
+                </dxmvvm:Interaction.Behaviors>
+            </dx:SimpleButton>
+            
         </StackPanel>
 
         <dxg:GridControl Grid.Row="1" 
@@ -46,8 +68,8 @@
                          >
             <dxg:GridControl.Columns>
 
-                <dxg:GridColumn Header="Статус" FieldName="StatusId"  EditFormVisibleIndex="0">
-                    <dxg:GridColumn.EditSettings>
+                <dxg:GridColumn Header="Статус" FieldName="StatusId"/>
+                <!--<dxg:GridColumn.EditSettings>
                         <dxg:LookUpEditSettings ItemsSource="{Binding Path=(services:DataRepository.Statuses)}" 
                                                 AutoComplete="True" 
                                                 ShowSizeGrip="True" 
@@ -75,42 +97,42 @@
                             </dxg:LookUpEditSettings.StyleSettings>
                         </dxg:LookUpEditSettings>
                     </dxg:GridColumn.EditSettings>
-                </dxg:GridColumn>
+                </dxg:GridColumn>-->
 
-                <dxg:GridColumn  FieldName="ClearanceMounth"  Header="Месяц оформления" BestFitMode="Default" IsSmart="True" UnboundType="DateTime" EditFormVisibleIndex="1">
-                    <dxg:GridColumn.EditSettings>
+                <dxg:GridColumn  FieldName="ClearanceMounth"  Header="Месяц оформления" BestFitMode="Default" IsSmart="True" UnboundType="DateTime"/>
+                <!--<dxg:GridColumn.EditSettings>
                         <dxe:DateEditSettings  AllowNullInput="True" NullText="N/A">
                             <dxe:DateEditSettings.StyleSettings>
                                 <dxe:DateEditPickerStyleSettings/>
                             </dxe:DateEditSettings.StyleSettings>
                         </dxe:DateEditSettings>
                     </dxg:GridColumn.EditSettings>
-                </dxg:GridColumn>
+                </dxg:GridColumn>-->
 
-                <dxg:GridColumn FieldName="AccurualMounth" Header="Месяц начислений" BestFitMode="Default" IsSmart="True" UnboundType="DateTime" EditFormVisibleIndex="2">
-                    <dxg:GridColumn.EditSettings>
+                <dxg:GridColumn FieldName="AccurualMounth" Header="Месяц начислений" BestFitMode="Default" IsSmart="True" UnboundType="DateTime"/>
+                <!--<dxg:GridColumn.EditSettings>
                         <dxe:DateEditSettings AllowNullInput="True" NullText="N/A">
                             <dxe:DateEditSettings.StyleSettings>
                                 <dxe:DateEditPickerStyleSettings/>
                             </dxe:DateEditSettings.StyleSettings>
                         </dxe:DateEditSettings>
                     </dxg:GridColumn.EditSettings>
-                </dxg:GridColumn>
+                </dxg:GridColumn>-->
 
-                <dxg:GridColumn Header="Дата документа" FieldName="CompensationDate" BestFitMode="Default" IsSmart="True" UnboundType="DateTime" EditFormVisibleIndex="3">
-                    <dxg:GridColumn.EditSettings>
+                <dxg:GridColumn Header="Дата документа" FieldName="CompensationDate" BestFitMode="Default" IsSmart="True" UnboundType="DateTime"/>
+                <!--<dxg:GridColumn.EditSettings>
                         <dxe:DateEditSettings  AllowNullInput="True" NullText="N/A"/>
                     </dxg:GridColumn.EditSettings>
-                </dxg:GridColumn>
+                </dxg:GridColumn>-->
 
-                <dxg:GridColumn Header="Дата компенсации" FieldName="DocumentDateTime" BestFitMode="Default" IsSmart="True" UnboundType="DateTime" EditFormVisibleIndex="4">
-                    <dxg:GridColumn.EditSettings>
+                <dxg:GridColumn Header="Дата компенсации" FieldName="DocumentDateTime" BestFitMode="Default" IsSmart="True" UnboundType="DateTime"/>
+                <!--<dxg:GridColumn.EditSettings>
                         <dxe:DateEditSettings AllowNullInput="True" NullText="N/A"/>
                     </dxg:GridColumn.EditSettings>
-                </dxg:GridColumn>
+                </dxg:GridColumn>-->
 
-                <dxg:GridColumn FieldName="ProviderId" Header="Поставщик" EditFormCaption="Поставщик" EditFormVisibleIndex="5">
-                    <dxg:GridColumn.EditSettings>
+                <dxg:GridColumn FieldName="ProviderId" Header="Поставщик" EditFormCaption="Поставщик"/>
+                <!--<dxg:GridColumn.EditSettings>
                         <dxg:LookUpEditSettings ItemsSource="{Binding Path=(services:DataRepository.Providers)}" 
                                                 AutoComplete="True" 
                                                 ShowSizeGrip="True" 
@@ -138,10 +160,10 @@
                             </dxg:LookUpEditSettings.StyleSettings>
                         </dxg:LookUpEditSettings>
                     </dxg:GridColumn.EditSettings>
-                </dxg:GridColumn>
+                </dxg:GridColumn>-->
 
-                <dxg:GridColumn FieldName="CompanyId" Header="Компания" EditFormVisibleIndex="6">
-                    <dxg:GridColumn.EditSettings>
+                <dxg:GridColumn FieldName="CompanyId" Header="Компания"/>
+                <!--<dxg:GridColumn.EditSettings>
                         <dxg:LookUpEditSettings ItemsSource="{Binding Path=(services:DataRepository.Companies)}" 
                                                 AutoComplete="True" 
                                                 ShowSizeGrip="True" 
@@ -169,10 +191,10 @@
                             </dxg:LookUpEditSettings.StyleSettings>
                         </dxg:LookUpEditSettings>
                     </dxg:GridColumn.EditSettings>
-                </dxg:GridColumn>
+                </dxg:GridColumn>-->
 
-                <dxg:GridColumn FieldName="ItemId" Header="Статья" EditFormCaption="Статья" EditFormVisibleIndex="7">
-                    <dxg:GridColumn.EditSettings>
+                <dxg:GridColumn FieldName="ItemId" Header="Статья" EditFormCaption="Статья"/>
+                <!--<dxg:GridColumn.EditSettings>
                         <dxg:LookUpEditSettings ItemsSource="{Binding Path=(services:DataRepository.Items)}" 
                                                 AutoComplete="True" 
                                                 ShowSizeGrip="True" 
@@ -200,24 +222,24 @@
                             </dxg:LookUpEditSettings.StyleSettings>
                         </dxg:LookUpEditSettings>
                     </dxg:GridColumn.EditSettings>
-                </dxg:GridColumn>
+                </dxg:GridColumn>-->
 
-                <dxg:GridColumn FieldName="Comments" Header="Примечания" EditFormVisibleIndex="8"/>
+                <dxg:GridColumn FieldName="Comments" Header="Примечания"/>
 
-                <dxg:GridColumn Header="Факт" FieldName="FactSum" UnboundType="Decimal" EditFormVisibleIndex="9">
-                    <dxg:GridColumn.EditSettings>
-                        <dxe:TextEditSettings MaskType="Numeric" Mask="N2" MaskUseAsDisplayFormat="True"/>
-                    </dxg:GridColumn.EditSettings>
-                </dxg:GridColumn>
+                <dxg:GridColumn Header="Факт" FieldName="FactSum" UnboundType="Decimal" />
+                <!--<dxg:GridColumn.EditSettings>
+                    <dxe:TextEditSettings MaskType="Numeric" Mask="N2" MaskUseAsDisplayFormat="True"/>
+                </dxg:GridColumn.EditSettings>-->
 
-                <dxg:GridColumn Header="План" FieldName="PlanSum" UnboundType="Decimal" EditFormVisibleIndex="10">
-                    <dxg:GridColumn.EditSettings>
+
+                <dxg:GridColumn Header="План" FieldName="PlanSum" UnboundType="Decimal"/>
+                <!--<dxg:GridColumn.EditSettings>
                         <dxe:TextEditSettings MaskType="Numeric" Mask="n2" MaskUseAsDisplayFormat="True"/>
                     </dxg:GridColumn.EditSettings>
-                </dxg:GridColumn>
+                </dxg:GridColumn>-->
 
-                <dxg:GridColumn FieldName="InvoiceId" Header="№ СФ" EditFormVisibleIndex="11">
-                    <dxg:GridColumn.EditSettings>
+                <dxg:GridColumn FieldName="InvoiceId" Header="№ СФ"/>
+                <!--<dxg:GridColumn.EditSettings>
                         <dxg:LookUpEditSettings ItemsSource="{Binding Path=(services:DataRepository.Invoices)}" 
                                                 AutoComplete="True" 
                                                 ShowSizeGrip="True" 
@@ -245,10 +267,10 @@
                             </dxg:LookUpEditSettings.StyleSettings>
                         </dxg:LookUpEditSettings>
                     </dxg:GridColumn.EditSettings>
-                </dxg:GridColumn>
+                </dxg:GridColumn>-->
 
-                <dxg:GridColumn FieldName="PaymentMethodId" Header="Способ оплаты" EditFormVisibleIndex="12">
-                    <dxg:GridColumn.EditSettings>
+                <dxg:GridColumn FieldName="PaymentMethodId" Header="Способ оплаты"/>
+                <!--<dxg:GridColumn.EditSettings>
                         <dxg:LookUpEditSettings ItemsSource="{Binding Path=(services:DataRepository.PaymentMethods)}" 
                                                 AutoComplete="True" 
                                                 ShowSizeGrip="True" 
@@ -276,27 +298,25 @@
                             </dxg:LookUpEditSettings.StyleSettings>
                         </dxg:LookUpEditSettings>
                     </dxg:GridColumn.EditSettings>
-                </dxg:GridColumn>
+                </dxg:GridColumn>-->
 
-                <dxg:GridColumn FieldName="HasOriginal" Header="Оригинал" EditFormVisibleIndex="13">
-                    <dxg:GridColumn.EditSettings>
+                <dxg:GridColumn FieldName="HasOriginal" Header="Оригинал"/>
+                <!--<dxg:GridColumn.EditSettings>
+                    <dxe:CheckEditSettings/>
+                </dxg:GridColumn.EditSettings>-->
+
+
+                <dxg:GridColumn FieldName="HasScan" Header="Скан"/>
+                <!--<dxg:GridColumn.EditSettings>
                         <dxe:CheckEditSettings/>
                     </dxg:GridColumn.EditSettings>
-                </dxg:GridColumn>
-
-                <dxg:GridColumn FieldName="HasScan" Header="Скан" EditFormVisibleIndex="14">
-                    <dxg:GridColumn.EditSettings>
-                        <dxe:CheckEditSettings/>
-                    </dxg:GridColumn.EditSettings>
-                </dxg:GridColumn>
+                </dxg:GridColumn>-->
 
             </dxg:GridControl.Columns>
             <dxg:GridControl.View>
                 <dxg:TableView Name="view" 
-                               AllowEditing="True" 
-                               BestFitMode="AllRows"                          
-                               EditFormPostConfirmation="YesNoCancel" 
-                               EditFormShowMode="InlineHideRow" 
+                               AllowEditing="False" 
+                               BestFitMode="AllRows"    
                                NavigationStyle="Row"
                                ShowGroupPanel="True">
                     <dxmvvm:Interaction.Behaviors>

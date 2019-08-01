@@ -1,19 +1,20 @@
 ﻿using comp_app.MVVM.Model;
+using comp_app.MVVM.Model.Common;
 using System;
+using System.Reflection;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using comp_app.Services.Common;
 
 namespace comp_app.Services
 {
     public static class DataRepository
     {
-        public static List<Document> Documents { get; set; } = new List<Document>();
-        public static List<Company> Companies { get; set; } = new List<Company>();
-        public static List<Status> Statuses { get; set; } = new List<Status>();
-        public static List<Provider> Providers { get; set; } = new List<Provider>();
-        public static List<PaymentMethod> PaymentMethods { get; set; } = new List<PaymentMethod>();
-        public static List<Item> Items { get; set; } = new List<Item>();
-        public static List<Invoice> Invoices { get; set; } = new List<Invoice>();
+        public static GenericRepository<Document> Documents { get; set; }
+        public static GenericRepository<Company> Companies { get; set; }
+        public static GenericRepository<Status> Statuses { get; set; }
+        public static GenericRepository<Provider> Providers { get; set; }
+        public static GenericRepository<PaymentMethod> PaymentMethods { get; set; }
+        public static GenericRepository<Item> Items { get; set; }
+        public static GenericRepository<Invoice> Invoices { get; set; }
     }
 }
