@@ -1,5 +1,5 @@
-﻿using comp_app.MVVM.Model;
-using comp_app.MVVM.ViewModel;
+﻿using comp_app.MVVM.ViewModel.Common;
+using comp_app.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,17 +13,19 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace comp_app.MVVM.View
+namespace comp_app
 {
     /// <summary>
-    /// Логика взаимодействия для DocumentSingleWindow.xaml
+    /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
-    public partial class DocumentSingleWindow : Page
+    public partial class MainWindow : Window
     {
-        public DocumentSingleWindow(Document _document)
+        public MainWindow()
         {
             InitializeComponent();
-            this.DataContext = new DocumentSingleViewModel(_document, ref docWindow);
-        }        
+            TabService.Configure(ref mainWindow, ref MainTabControl);
+            DataContext = new MainViewModel(ref mainWindow);
+            UpdateLayout();
+        }
     }
 }

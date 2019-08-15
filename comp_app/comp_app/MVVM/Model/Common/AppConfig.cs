@@ -11,11 +11,7 @@
             DbPort = AppSettings.AppConfig.DbPort;
             DbSID = AppSettings.AppConfig.DbSID;
                        
-            EnableLogging = AppSettings.AppConfig.EnableLogging;
-
-            EnableProxy = AppSettings.AppConfig.EnableProxy;
-            ProxyUserName = AppSettings.AppConfig.ProxyUserName;
-            ProxyUserPassword = AppSettings.AppConfig.ProxyUserPassword;
+            EnableLogging = AppSettings.AppConfig.EnableLogging;            
         }
 
         public string DbUserName { get; set; }
@@ -27,9 +23,5 @@
         public bool? EnableLogging { get; set; } 
 
         public string Schema { get; set; }
-
-        public bool? EnableProxy { get; set; }
-        public string ProxyUserName { get; set; }
-        public string ProxyUserPassword { get; set; }
     }
 }

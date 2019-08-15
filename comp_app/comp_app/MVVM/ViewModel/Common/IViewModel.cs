@@ -6,9 +6,9 @@ using System.Text;
 
 namespace comp_app.MVVM.ViewModel.Common
 {
-    public interface IViewModel<T> : INotifyPropertyChanged
+    public interface IViewModel<TView> : INotifyPropertyChanged
     {
-        void Delete(object o = null);
-        void Refresh(object o = null);
+        TView View { get; set; }
+        void NotifyPropertyChanged(string PropName);
     }
 }

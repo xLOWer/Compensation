@@ -9,6 +9,7 @@ using System.Windows;
 using DevExpress.Xpf.Core;
 using comp_app.MVVM.Model.Common;
 using comp_app.MVVM.Model;
+using Newtonsoft.Json;
 
 namespace comp_app.Services
 {
@@ -90,6 +91,87 @@ namespace comp_app.Services
             }
         }
 
+        public static void InsertNewEntity<TEntity>(TEntity obj)
+        {
+            var f = typeof(TEntity).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var entityOraAttr = (OracleTableAttribute)typeof(TEntity).GetCustomAttributes(typeof(OracleTableAttribute), false).FirstOrDefault();
+            string values = "";
+            string names = "";
+            int i = 0;
+            foreach (var prop in f)
+            {
+                names += (i > 0 ? ", " : "") + prop.Name;
+                values += (i++ > 0 ? ", " : "") + JsonConvert.SerializeObject(prop.GetValue(obj, null));
+            }
+            var sql = $"insert into {entityOraAttr.SchemeName}.{entityOraAttr.TableName}({names})values({values.Replace("\"", "'").Replace("false", "0").Replace("true", "1")})";
+            Insert(sql);
+        }
+
+        /// <summary>
+        /// Получить конкретную сущность по её Id
+        /// </summary>
+        /// <typeparam name="TEntity">Тип сущности</typeparam>
+        /// <param name="id">Идентификационный номер сущности в БД</param>
+        /// <returns>Сущность определённого типа</returns>
+        public static TEntity GetEntitySingle<TEntity>(long id) where TEntity : IRef
+        {
+            var entityOraAttr = (OracleTableAttribute)typeof(TEntity).GetCustomAttributes(typeof(OracleTableAttribute), false).FirstOrDefault();
+            var sqlStr = Sqls.SelectJsonString(entityOraAttr.SchemeName, entityOraAttr.TableName);
+            var json = SelectSingleValue(sqlStr);
+            var ser = JsonConvert.DeserializeObject<SerealizableObject<TEntity>>(json);
+            var entity = ser.GetList().FirstOrDefault();
+            return entity;
+        }
+
+        /// <summary>
+        /// Получить список всех сущностей определённого типа
+        /// </summary>
+        /// <typeparam name="TEntity">Тип сущности</typeparam>
+        /// <returns>Список сущностей определенного типа</returns>
+        public static List<TEntity> GetEntityList<TEntity>()
+        {
+            var entityOraAttr = (OracleTableAttribute)typeof(TEntity).GetCustomAttributes(typeof(OracleTableAttribute), false).FirstOrDefault();
+
+            var sqlStr = Sqls.SelectJsonString(entityOraAttr.SchemeName, entityOraAttr.TableName);
+            var json = SelectSingleValue(sqlStr);
+            var ser = JsonConvert.DeserializeObject<SerealizableObject<TEntity>>(json);
+            var list = ser.GetList();
+            return list;
+        }
+        
+        public class SerealizableObject<TEntity>
+        {
+            public string[] names { get; set; }
+            public object[][] data { get; set; }
+
+
+            public List<TEntity> GetList()
+            {
+                var names = this.names.ToList();
+                const BindingFlags flags = BindingFlags.Public | BindingFlags.Instance;
+                List<TEntity> ret = new List<TEntity>();
+                var objectProperties = typeof(TEntity).GetProperties(flags).Where(x => names.Contains(x.Name)).ToArray();
+
+                foreach (var obj in data)
+                {
+                    TEntity newInstance = Activator.CreateInstance<TEntity>();
+                    foreach (var prop in objectProperties)
+                    {
+                        object newPropVal;
+                        newPropVal = prop.PropertyType.IsEquivalentTo(typeof(__bool))
+                            ? new __bool(obj[names.IndexOf(prop.Name)].ToString() == "1")
+                            : Convert.ChangeType(obj[names.IndexOf(prop.Name)], prop.PropertyType);
+                        prop.SetValue(newInstance, newPropVal, null);
+                    }
+
+                    ret.Add(newInstance);
+                }
+                return ret;
+            }
+
+
+        }
+
         internal static string SelectSingleValue(string Sql)
         {
             Utilites.Logger.Log($"[ORCL] {MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
@@ -123,6 +205,8 @@ namespace comp_app.Services
         
         internal static class Sqls
         {
+            internal static string SelectJsonString(string SchemeName, string TableName) => $"SELECT {SchemeName}.get_json('select * from {SchemeName}.{TableName}') json FROM dual";
+
             internal static string DatesBetween(DateTime Date)
                 => $" BETWEEN {OracleDateFormat(Date)} AND {OracleDateFormat(Date)} ";
 
@@ -167,8 +251,8 @@ namespace comp_app.Services
                 if (!string.IsNullOrEmpty(AppSettings.AppConfig.connString) ||
                     !String.IsNullOrEmpty(AppSettings.AppConfig.DbUserName) ||
                     !String.IsNullOrEmpty(AppSettings.AppConfig.DbUserPassword) ||
-                    !String.IsNullOrEmpty(AppSettings.AppConfig.DbSID) ||
-                    !String.IsNullOrEmpty(AppSettings.AppConfig.DbPort) ||
+                    //!String.IsNullOrEmpty(AppSettings.AppConfig.DbSID) ||
+                    //!String.IsNullOrEmpty(AppSettings.AppConfig.DbPort) ||
                     !String.IsNullOrEmpty(AppSettings.AppConfig.DbHost))
                 {
                     conn = new OracleConnection(AppSettings.AppConfig.connString);
@@ -187,14 +271,11 @@ namespace comp_app.Services
             }
 
         }
-    }
 
-    internal static partial class DbService<TModel>
-    {
-        internal static List<TModel> DocumentSelect(string Sql)
+        internal static List<TModel> DocumentSelect<TModel>(string Sql)
         {
             Utilites.Logger.Log($"[ORCL] {MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
-            Utilites.Logger.Log("\t\t"+Sql);
+            Utilites.Logger.Log("\t\t" + Sql);
             List<TModel> Documents = new List<TModel>();
             DataTable DataGridItems = ObjToDataTable(typeof(TModel));
             using (OracleCommand command = new OracleCommand())
@@ -206,7 +287,7 @@ namespace comp_app.Services
                 adapter.Fill(DataGridItems);
             }
 
-            Documents = ToListof(DataGridItems).ToList();
+            Documents = ToListof<TModel>(DataGridItems).ToList();
             return Documents;
         }
         /*
@@ -221,38 +302,38 @@ namespace comp_app.Services
             return inst;
         }*/
 
-        internal static List<TModel> ToListof(DataTable dt)
+        internal static List<TModel> ToListof<TModel>(DataTable dt)
         {
             const BindingFlags flags = BindingFlags.Public | BindingFlags.Instance;
             var columnNames = dt.Columns.Cast<DataColumn>()
-                .Select( c => c.ColumnName )
+                .Select(c => c.ColumnName)
                 .ToList();
-            var objectProperties = typeof( TModel ).GetProperties( flags );
-            var targetList = dt.AsEnumerable().Select( dataRow =>
+            var objectProperties = typeof(TModel).GetProperties(flags);
+            var targetList = dt.AsEnumerable().Select(dataRow =>
             {
                 var instanceOfT = Activator.CreateInstance<TModel>();
 
-                foreach (var properties in objectProperties.Where( properties => columnNames.Contains( properties.Name ) && dataRow[properties.Name] != DBNull.Value ))
+                foreach (var properties in objectProperties.Where(properties => columnNames.Contains(properties.Name) && dataRow[properties.Name] != DBNull.Value))
                 {
-                    properties.SetValue( instanceOfT, dataRow[properties.Name], null );
+                    properties.SetValue(instanceOfT, dataRow[properties.Name], null);
                 }
                 return instanceOfT;
-            } ).ToList();
+            }).ToList();
 
             return targetList;
         }
 
 
-        internal static DataTable ObjToDataTable(Type type)
+        internal static DataTable ObjToDataTable<TModel>(Type type)
         {
             var dt = new DataTable();
             foreach (var info in type.GetProperties())
-                dt.Columns.Add( info.Name );
+                dt.Columns.Add(info.Name);
             dt.AcceptChanges();
             return dt;
         }
 
-        internal static List<TModel> DocumentSelect(List<string> Sqls)
+        internal static List<TModel> DocumentSelect<TModel>(List<string> Sqls)
         {
             Utilites.Logger.Log($"[ORCL] {MethodBase.GetCurrentMethod().DeclaringType} {MethodBase.GetCurrentMethod().Name}");
             Utilites.Logger.Log("\t\tSqls.Count=" + Sqls.Count.ToString());
@@ -271,11 +352,10 @@ namespace comp_app.Services
                 }
             }
 
-            Documents = ToListof(DataGridItems).ToList();
+            Documents = ToListof<TModel>(DataGridItems).ToList();
             return Documents;
         }
-
-
     }
+
 
 }

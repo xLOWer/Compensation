@@ -1,0 +1,83 @@
+﻿<Window x:Class="comp_app.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+        xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+        xmlns:dxl="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+        xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+        xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+        xmlns:lc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+        xmlns:local="clr-namespace:comp_app"
+        xmlns:set="clr-namespace:comp_app.AppSettings"
+        xmlns:services="clr-namespace:comp_app.Services"
+        mc:Ignorable="d"
+        Title="MainWindow" 
+        Height="Auto"
+        Width="Auto" 
+        Name="mainWindow"
+        WindowState="Maximized"
+        dx:ThemeManager.ThemeName="{x:Static set:AppConfig.ThemeName}">
+    <dxmvvm:Interaction.Behaviors>
+        <dxmvvm:EventToCommand EventName="Closed" 
+                                       Command="{Binding CloseCommand}"   
+                                       PassEventArgsToCommand="False"
+                                       UseDispatcher="True"/>
+    </dxmvvm:Interaction.Behaviors>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <dxb:BarContainerControl Name="TopMenu1" ContainerType="Top" Grid.Row="0">
+            <dxb:MainMenuControl Caption="Main Menu">
+
+                <dxb:BarButtonItem x:Name="Documents" Content="Документы" Command="{Binding DocumentsOpenCommand}"/>
+
+            </dxb:MainMenuControl>
+        </dxb:BarContainerControl>
+
+        <dx:DXTabControl Name="MainTabControl"  Grid.Row="1"   
+                         ItemsSource="{Binding Source={x:Static services:TabService.Tabs}}"
+                         SelectedIndex="0"
+                         AllowDrop="True"
+                        >
+            <dx:DXTabControl.ItemHeaderTemplate>
+                <DataTemplate>
+                    <TextBlock Width="Auto" Text="{Binding Title}"/>
+                </DataTemplate>
+            </dx:DXTabControl.ItemHeaderTemplate>
+            <dx:DXTabControl.ItemTemplate>
+                <DataTemplate>
+                    <Frame Content="{Binding View.Content}" Width="Auto" Height="Auto" NavigationUIVisibility="Hidden"/>
+                </DataTemplate>
+            </dx:DXTabControl.ItemTemplate>
+
+            <dx:DXTabControl.View>
+                <dx:TabControlScrollView AllowHideTabItems="True"
+                                         HideButtonShowMode="InAllTabs"                                          
+                                         AllowScrollOnMouseWheel="True"
+                                         AllowKeyboardNavigation="True"
+                                         ShowHeaderMenu="True"
+                                         ShowHiddenTabItemsInHeaderMenu="True"
+                                         ShowDisabledTabItemsInHeaderMenu="True"
+                                         ShowVisibleTabItemsInHeaderMenu="False"/>
+            </dx:DXTabControl.View>
+        </dx:DXTabControl>
+
+        <dxb:BarContainerControl ContainerType="Bottom" Grid.Row="2">
+            <dxb:StatusBarControl Caption="Status Bar">
+
+                <!--<dxb:BarStaticItem Content="Юзер:"/>
+                <dxb:BarEditItem Content="{x:Static settings:AppConfig.DbUserName}"/>
+                <dxb:BarItemSeparator/>-->
+
+            </dxb:StatusBarControl>
+        </dxb:BarContainerControl>
+
+        </Grid>
+</Window>

@@ -1,6 +1,7 @@
 ﻿using comp_app.AppSettings;
 using System;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -66,6 +67,76 @@ namespace comp_app.Services
                 }
             }
 
+        }
+
+        //private const string key = "fYjQuN";
+
+        public static string XorAndCompress(string input)
+        {
+            //var xor_text = xorIt(input, key); // {"DbUserName":null,"DbUserPassword":null,"DbPort":"1521","DbSID":null,"DbHost":null,"EnableLogging":false,"Schema":"HPCSERVICE","EnableProxy":false,"ProxyUserName":null,"ProxyUserPassword":null}
+            var compress_text = Compress(input); //
+            return compress_text; // 
+        }
+
+        public static string DecompressAndUnxor(string input)
+        {
+            var decompress_text = Decompress(input);//
+            //var unxor_text = xorIt(decompress_text, key);//
+            return decompress_text;//
+        }
+
+
+
+
+        public static string xorIt(string text, string key)
+        {
+            var result = new StringBuilder();
+
+            for (int c = 0; c < text.Length; c++)
+            {
+                char character = text[c];
+                uint charCode = (uint)character;
+                int keyPosition = c % key.Length;
+                char keyChar = key[keyPosition];
+                uint keyCode = (uint)keyChar;
+                uint combinedCode = charCode ^ keyCode;
+                char combinedChar = (char)combinedCode;
+                result.Append(combinedChar);
+            }
+            return result.ToString();
+        }
+
+        public static string Compress(string uncompressedString)
+        {
+            byte[] compressedBytes;
+            using (var uncompressedStream = new MemoryStream(Encoding.UTF8.GetBytes(uncompressedString)))
+            {
+                using (var compressedStream = new MemoryStream())
+                {
+                    using (var compressorStream = new DeflateStream(compressedStream, CompressionMode.Compress, true))
+                    {
+                        uncompressedStream.CopyTo(compressorStream);
+                    }
+                    compressedBytes = compressedStream.ToArray();
+                }
+            }
+
+            return Convert.ToBase64String(compressedBytes);
+        }
+        
+        public static string Decompress(string compressedString)
+        {
+            byte[] decompressedBytes;
+            var compressedStream = new MemoryStream(Convert.FromBase64String(compressedString));
+            using (var decompressorStream = new DeflateStream(compressedStream, CompressionMode.Decompress))
+            {
+                using (var decompressedStream = new MemoryStream())
+                {
+                    decompressorStream.CopyTo(decompressedStream);
+                    decompressedBytes = decompressedStream.ToArray();
+                }
+            }
+            return Encoding.UTF8.GetString(decompressedBytes);
         }
     }
 }

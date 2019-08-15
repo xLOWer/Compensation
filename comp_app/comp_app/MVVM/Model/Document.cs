@@ -1,32 +1,141 @@
 ﻿using comp_app.MVVM.Model.Common;
+using comp_app.Services;
 using System;
-using System.Collections.Generic;
 
 namespace comp_app.MVVM.Model
 {
+    /// <summary>
+    /// Документ
+    /// </summary>
+    [OracleTable(TableName = "COMP_DOCUMENT", SchemeName = "DEVELOPER3")]
     public class Document : IRef
     {
+        public Document WithNewId()
+        {
+            ID = DataRepository.Max<Document>(x => x.ID);
+            return this;
+        }
+
         public Document()
         {
+            Status = new Status();
+            Provider = new Provider();
+            Company = new Company();
+            Item = new Item();
+            Invoice = new Invoice();
+            PaymentMethod = new PaymentMethod();
+
+            ID = 0;
+            NAME = "";
+            STATUS_ID = 0;
+            CLEARANCE_MOUNTH = 0;
+            ACCURUAL_MOUNTH = 0;
+            PROVIDER_ID = 0;
+            COMPANY_ID = 0;
+            ITEM_ID = 0;
+            COMMENTS = "";
+            FACT_SUM = 0;
+            PLAN_SUM = 0;
+            INVOICE_ID = 0;
+            PAYMENT_METHOD_ID = 0;
+            HAS_ORIGINAL = new __bool();
+            HAS_SCAN = new __bool();
+            DOCUMENT_DATE_TIME = "";
+            COMPENSATION_DATE = "";
 
         }
 
-        public string Id { get; set; }
-        public string Name { get; set; }
-        public string StatusId { get; set; } // статус
-        public string ClearanceMounth { get; set; } // Месяц оформления
-        public string AccurualMounth { get; set; } // Месяц начислений
-        public string ProviderId { get; set; } // Поставщик
-        public string CompanyId { get; set; } // Компания
-        public string ItemId { get; set; } // Статья
-        public string Comments { get; set; } // Примечания
-        public string FactSum { get; set; } // Факт
-        public string PlanSum { get; set; } // План
-        public string InvoiceId { get; set; } // № СФ
-        public string PaymentMethodId { get; set; } // Способ оплаты
-        public string HasOriginal { get; set; } // Оригинал
-        public string HasScan { get; set; } // Скан
-        public string DocumentDateTime { get; set; }// Дата документа 
-        public string CompensationDate { get; set; }// Дата компенсации
+        /// <summary>
+        /// Идентификатор
+        /// </summary>
+        public long ID { get; set; }
+
+        /// <summary>
+        /// Наименование
+        /// </summary>
+        public string NAME { get; set; }
+
+        /// <summary>
+        /// Статус
+        /// </summary>
+        public long STATUS_ID { get; set; }
+
+        /// <summary>
+        /// Месяц оформления
+        /// </summary>
+        public long CLEARANCE_MOUNTH { get; set; }
+
+        /// <summary>
+        /// Месяц начислений
+        /// </summary>
+        public long ACCURUAL_MOUNTH { get; set; }
+
+        /// <summary>
+        /// Поставщик
+        /// </summary>
+        public long PROVIDER_ID { get; set; }
+
+        /// <summary>
+        /// Компания
+        /// </summary>
+        public long COMPANY_ID { get; set; }
+
+        /// <summary>
+        /// Статья
+        /// </summary>
+        public long ITEM_ID { get; set; }
+
+        /// <summary>
+        /// Примечания
+        /// </summary>
+        public string COMMENTS { get; set; }
+
+        /// <summary>
+        /// Факт
+        /// </summary>
+        public decimal FACT_SUM { get; set; }
+
+        /// <summary>
+        /// План
+        /// </summary>
+        public decimal PLAN_SUM { get; set; }
+
+        /// <summary>
+        ///  № СФ
+        /// </summary>
+        public long INVOICE_ID { get; set; }
+        
+        /// <summary>
+        /// Способ оплаты
+        /// </summary>
+        public long PAYMENT_METHOD_ID { get; set; }
+
+        /// <summary>
+        /// Имеется ли оригинал
+        /// </summary>
+        public __bool HAS_ORIGINAL { get; set; }
+
+        /// <summary>
+        /// Имеется ли скан
+        /// </summary>
+        public __bool HAS_SCAN { get; set; }
+        /// <summary>
+        /// Дата документа 
+        /// </summary>
+        public string DOCUMENT_DATE_TIME { get; set; }
+
+        /// <summary>
+        /// Дата компенсации
+        /// </summary>
+        public string COMPENSATION_DATE { get; set; }
+
+
+        /*   вспомогательные элементы для удобства работы в c#   */
+        internal Status Status { get; set; }
+        internal Provider Provider { get; set; }
+        internal Company Company { get; set; }
+        internal Item Item { get; set; }
+        internal Invoice Invoice { get; set; }
+        internal PaymentMethod PaymentMethod { get; set; }
     }
 }

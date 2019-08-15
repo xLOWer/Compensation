@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace comp_app.MVVM.Model.Common
+﻿namespace comp_app.MVVM.Model.Common
 {
     public interface IRef
     {
-        string Id { get; set; }
-        string Name { get; set; }
+        /// <summary>
+        /// Идентификатор
+        /// </summary>
+        long ID { get; set; }
+        /// <summary>
+        /// Наименование
+        /// </summary>
+        string NAME { get; set; }
     }
 }

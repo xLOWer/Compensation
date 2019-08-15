@@ -1,4 +1,4 @@
-﻿<Window x:Class="comp_app.MVVM.View.DocumentSingleWindow"
+﻿<Page x:Class="comp_app.MVVM.View.DocumentSingleWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -10,15 +10,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:comp_app.MVVM.View"
         mc:Ignorable="d"
-        Title="DocumentSingleWindow" Height="450" Width="800">
-    
-    <Window.Resources>
+        Name="docWindow"
+        Title="Документ" Height="450" Width="800"
+        xmlns:services="clr-namespace:comp_app.Services"
+        xmlns:set="clr-namespace:comp_app.AppSettings"
+        dx:ThemeManager.ThemeName="{x:Static set:AppConfig.ThemeName}">
+
+    <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Templates/TemplateResourses.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-    </Window.Resources>
+    </Page.Resources>
     
     <lc:LayoutControl Orientation="Vertical">
 
@@ -45,35 +49,35 @@
         </lc:LayoutGroup>
 
         <lc:LayoutItem Label="Поставщик">
-            <dxe:TextEdit Text="{Binding Document.ProviderId}"/>
+            <dxe:TextEdit Text="{Binding Item.PROVIDER_ID}"/>
         </lc:LayoutItem>
 
         <lc:LayoutItem Label="Компания">
-            <dxe:TextEdit Text="{Binding Document.CompanyId}"/>
+            <dxe:TextEdit Text="{Binding Item.COMPANY_ID}"/>
         </lc:LayoutItem>
 
         <lc:LayoutItem Label="Месяц начисления">
-            <dxe:TextEdit Text="{Binding Document.CompanyId}"/>
+            <dxe:TextEdit Text="{Binding Item.ACCURUAL_MOUNTH}"/>
         </lc:LayoutItem>
 
         <lc:LayoutItem Label="Месяц оформления">
-            <dxe:TextEdit Text="{Binding Document.CompanyId}"/>
+            <dxe:TextEdit Text="{Binding Item.CLEARANCE_MOUNTH}"/>
         </lc:LayoutItem>
 
         <lc:LayoutItem Label="План. дата поступления ДС">
-            <dxe:TextEdit Text="{Binding Document.CompanyId}"/>
+            <dxe:TextEdit Text="{Binding Item.COMPENSATION_DATE}"/>
         </lc:LayoutItem>
 
         <lc:LayoutItem Label="Оригинал">
-            <dxe:CheckEdit Content="{Binding Document.HasOriginal}"/>
+            <dxe:CheckEdit EditValue="{Binding Item.HAS_ORIGINAL}"/>
         </lc:LayoutItem>
 
         <lc:LayoutItem Label="Комментарий">
-            <dxe:TextEdit Text="{Binding Document.Comments}"/>
+            <dxe:TextEdit Text="{Binding Item.COMMENTS}"/>
         </lc:LayoutItem>
 
         <lc:LayoutItem Label="Приложенная СФ">
-            <dxe:TextEdit Text="{Binding Document.InvoiceId}"/>
+            <dxe:TextEdit Text="{Binding Item.INVOICE_ID}"/>
         </lc:LayoutItem>
 
         <lc:LayoutItem Label="Файл">
@@ -99,4 +103,4 @@
         </lc:LayoutItem>
 
     </lc:LayoutControl>
-</Window>
+</Page>

@@ -1,12 +1,17 @@
-﻿using System;
+﻿using comp_app.AppSettings;
+using comp_app.MVVM.Model;
+using comp_app.MVVM.Model.Common;
+using comp_app.MVVM.View;
+using comp_app.MVVM.ViewModel;
+using comp_app.Services;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Windows;
-using System.Windows.Markup;
 
 namespace comp_app
 {
@@ -17,6 +22,12 @@ namespace comp_app
     {
         public App()
         {
+            AppConfigHandler.Load();
+            AppConfigHandler.ConfigureOracle();
+            //DbService.InsertNewEntity(new Document() { ID = 3, NAME = "name3" });
+            DataRepository.LoadAll();
+            DataRepository.LazyLoad<Document>();
+
             CultureInfo culture = CultureInfo.CreateSpecificCulture("ru-RU");
 
             Thread.CurrentThread.CurrentUICulture = culture;
@@ -24,11 +35,7 @@ namespace comp_app
             System.Threading.Thread.CurrentThread.CurrentUICulture = culture;
 
             Thread.CurrentThread.CurrentCulture.NumberFormat.NumberGroupSeparator = " ";
-            
-            //Thread.CurrentThread.CurrentCulture.DateTimeFormat.LongDatePattern= "dd MMMM yyyy";
-            //Thread.CurrentThread.CurrentCulture.DateTimeFormat.ShortDatePattern = "dd MMMM yyyy";
-            //Thread.CurrentThread.CurrentCulture.DateTimeFormat.YearMonthPattern = "MMMM yyyy";
-            //Thread.CurrentThread.CurrentCulture.DateTimeFormat.MonthDayPattern = "dd MMMM";
         }
+
     }
 }

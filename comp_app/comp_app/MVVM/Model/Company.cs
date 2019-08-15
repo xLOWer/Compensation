@@ -1,14 +1,19 @@
 ﻿using comp_app.MVVM.Model.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace comp_app.MVVM.Model
 {
+    /// <summary>
+    /// Компания
+    /// </summary>
     public class Company : IRef
     {
-        public string Id { get; set; }
-        public string Name { get; set; }
+        /// <summary>
+        /// Идентификатор
+        /// </summary>
+        public long ID { get; set; }
+        /// <summary>
+        /// Наименование
+        /// </summary>
+        public string NAME { get; set; }
     }
 }

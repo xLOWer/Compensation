@@ -1,18 +1,16 @@
 ﻿using comp_app.Services;
 using System;
 using System.IO;
-using System.Xml;
-using System.Xml.Serialization;
 
 namespace comp_app.AppSettings
 {
     public static class AppConfigHandler
     {
-        private static string directoryPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-        private static string dirName = "CompensationApp";
-        private static string fileName = "CompensationAppConfig.xml";
-        private static string fullPath => Path.GetFullPath($"{directoryPath}\\{dirName}\\{fileName}");
-        public static string LogPath => Path.GetFullPath($"{directoryPath}\\{dirName}");
+        private static string directoryPath = ""/*Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)*/;
+        private static string dirName = "CompApp";
+        private static string fileName = "CompAppConf.xcnf";
+        private static string fullPath => Path.GetFullPath($"{fileName}");
+        public static string LogPath => Path.GetFullPath($"{dirName}");
         
         public static void ConfigureOracle()
         {
@@ -30,29 +28,18 @@ namespace comp_app.AppSettings
 
             if (!File.Exists(fullPath))
                 Create();
-
             Read();
 
             Utilites.Logger.Log($"\t\tconf_dir {directoryPath}\\{dirName}");
         }
 
-
-        public static void Save()
-        {
-            Create();
-        }
-
+        public static void Save() => Create();
+        public static void Create() => JsonService.Write(new MVVM.Model.Common.AppConfig(), fullPath);
 
         public static void Read()
         {
             Utilites.Logger.Log("[APPCONFIG]");
-            var newLoadedConfig = new MVVM.Model.Common.AppConfig();
-            XmlSerializer xml = new XmlSerializer(typeof(MVVM.Model.Common.AppConfig));
-            using (var stream = XmlReader.Create(fullPath))
-            {
-                newLoadedConfig = (MVVM.Model.Common.AppConfig)xml.Deserialize(stream);
-                stream.Close();
-            }
+            var newLoadedConfig = JsonService.Read<MVVM.Model.Common.AppConfig>(fullPath) ?? new MVVM.Model.Common.AppConfig();
 
             AppConfig.DbUserName = !string.IsNullOrEmpty(newLoadedConfig.DbUserName) ? newLoadedConfig.DbUserName : AppConfig.DbUserName;
             AppConfig.DbUserPassword = !string.IsNullOrEmpty(newLoadedConfig.DbUserPassword) ? newLoadedConfig.DbUserPassword : AppConfig.DbUserPassword;
@@ -64,25 +51,11 @@ namespace comp_app.AppSettings
 
             AppConfig.Schema = !string.IsNullOrEmpty(newLoadedConfig.Schema) ? newLoadedConfig.Schema : AppConfig.Schema;
 
-            AppConfig.EnableProxy = newLoadedConfig.EnableProxy ?? AppConfig.EnableProxy;
-            AppConfig.ProxyUserName = !string.IsNullOrEmpty(newLoadedConfig.ProxyUserName) ? newLoadedConfig.ProxyUserName : AppConfig.ProxyUserName;
-            AppConfig.ProxyUserPassword = !string.IsNullOrEmpty(newLoadedConfig.ProxyUserPassword) ? newLoadedConfig.ProxyUserPassword : AppConfig.ProxyUserPassword;
-
-
             Utilites.Logger.Log("\t\tDbUserName " + AppConfig.DbUserName);
             Utilites.Logger.Log("\t\tDbHost " + AppConfig.DbHost);
         }
 
-
-        public static void Create()
-        {
-            XmlSerializer xml = new XmlSerializer(typeof(MVVM.Model.Common.AppConfig));
-            using (var stream = XmlWriter.Create(fullPath))
-            {
-                xml.Serialize(stream, new MVVM.Model.Common.AppConfig());
-                stream.Close();
-            }
-        }
+        
 
 
     }

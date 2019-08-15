@@ -1,4 +1,4 @@
-﻿<Window x:Class="comp_app.MVVM.View.DocumentListWindow"
+﻿<Page x:Class="comp_app.MVVM.View.DocumentListWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -12,10 +12,13 @@
         xmlns:services="clr-namespace:comp_app.Services"
         xmlns:conv="clr-namespace:comp_app.Services.Converters"
         xmlns:glob="clr-namespace:System.Globalization;assembly=mscorlib"
+        xmlns:set="clr-namespace:comp_app.AppSettings"
+        dx:ThemeManager.ThemeName="{x:Static set:AppConfig.ThemeName}"
         mc:Ignorable="d"
+        Name="docListWindow"
         Title="DocumentListWindow" Height="850" Width="1200">
 
-    <Window.Resources>
+    <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Templates/TemplateResourses.xaml" />
@@ -24,7 +27,7 @@
             <conv:StringToBoolConverter x:Key="StringToBoolConverter"/>
             <conv:StringToDecimalConverter x:Key="StringToDecimalConverter"/>
         </ResourceDictionary>
-    </Window.Resources>
+    </Page.Resources>
     
     <Grid>
         <Grid.RowDefinitions>
@@ -62,13 +65,24 @@
 
         <dxg:GridControl Grid.Row="1" 
                          Name="grid" 
-                         ItemsSource="{Binding Path=(services:DataRepository.Documents)}" 
+                         ItemsSource="{Binding Items, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                          ShowBorder="False"
-                         SelectedItem="{Binding SelectedDocument}" 
-                         >
+                         SelectedItems="{Binding SelectedItems, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"                          
+                         SelectionMode="MultipleRow"
+                         ><!--CommandParameter="{Binding ElementName=comboBox, Path=EditValue}"-->
+            <dxmvvm:Interaction.Behaviors>
+                <dxmvvm:EventToCommand EventName="SelectedItemChanged" 
+                                       Command="{Binding SelectedItemChangedCommand}"   
+                                       PassEventArgsToCommand="False"
+                                       UseDispatcher="True"/>
+                <dxmvvm:EventToCommand EventName="ItemsSourceChanged" 
+                                       Command="{Binding ItemsSourceChangedCommand}"   
+                                       PassEventArgsToCommand="False"
+                                       UseDispatcher="True"/>
+            </dxmvvm:Interaction.Behaviors>
             <dxg:GridControl.Columns>
 
-                <dxg:GridColumn Header="Статус" FieldName="StatusId"/>
+                <dxg:GridColumn IsSmart="True" Header="Статус" FieldName="STATUS_ID"/>
                 <!--<dxg:GridColumn.EditSettings>
                         <dxg:LookUpEditSettings ItemsSource="{Binding Path=(services:DataRepository.Statuses)}" 
                                                 AutoComplete="True" 
@@ -83,8 +97,8 @@
                                 <ControlTemplate>
                                     <dxg:GridControl Name="PART_GridControl">
                                         <dxg:GridControl.Columns>
-                                            <dxg:GridColumn FieldName="Id" Header="Идентификатор"/>
-                                            <dxg:GridColumn FieldName="Name" Header="наименование"/>
+                                            <dxg:GridColumn IsSmart="True" FieldName="Id" Header="Идентификатор"/>
+                                            <dxg:GridColumn IsSmart="True" FieldName="Name" Header="наименование"/>
                                         </dxg:GridControl.Columns>
                                         <dxg:GridControl.View>
                                             <dxg:TableView AutoWidth="True" ShowSearchPanelMode="Always"/>
@@ -99,7 +113,7 @@
                     </dxg:GridColumn.EditSettings>
                 </dxg:GridColumn>-->
 
-                <dxg:GridColumn  FieldName="ClearanceMounth"  Header="Месяц оформления" BestFitMode="Default" IsSmart="True" UnboundType="DateTime"/>
+                <dxg:GridColumn IsSmart="True"  FieldName="CLEARANCE_MOUNTH"  Header="Месяц оформления" BestFitMode="Default" UnboundType="DateTime"/>
                 <!--<dxg:GridColumn.EditSettings>
                         <dxe:DateEditSettings  AllowNullInput="True" NullText="N/A">
                             <dxe:DateEditSettings.StyleSettings>
@@ -109,7 +123,7 @@
                     </dxg:GridColumn.EditSettings>
                 </dxg:GridColumn>-->
 
-                <dxg:GridColumn FieldName="AccurualMounth" Header="Месяц начислений" BestFitMode="Default" IsSmart="True" UnboundType="DateTime"/>
+                <dxg:GridColumn IsSmart="True" FieldName="ACCURUAL_MOUNTH" Header="Месяц начислений" BestFitMode="Default" UnboundType="DateTime"/>
                 <!--<dxg:GridColumn.EditSettings>
                         <dxe:DateEditSettings AllowNullInput="True" NullText="N/A">
                             <dxe:DateEditSettings.StyleSettings>
@@ -119,19 +133,19 @@
                     </dxg:GridColumn.EditSettings>
                 </dxg:GridColumn>-->
 
-                <dxg:GridColumn Header="Дата документа" FieldName="CompensationDate" BestFitMode="Default" IsSmart="True" UnboundType="DateTime"/>
+                <dxg:GridColumn IsSmart="True" Header="Дата документа" FieldName="COMPENSATION_DATE" BestFitMode="Default" UnboundType="DateTime"/>
                 <!--<dxg:GridColumn.EditSettings>
                         <dxe:DateEditSettings  AllowNullInput="True" NullText="N/A"/>
                     </dxg:GridColumn.EditSettings>
                 </dxg:GridColumn>-->
 
-                <dxg:GridColumn Header="Дата компенсации" FieldName="DocumentDateTime" BestFitMode="Default" IsSmart="True" UnboundType="DateTime"/>
+                <dxg:GridColumn IsSmart="True" Header="Дата компенсации" FieldName="DOCUMENT_DATE_TIME" BestFitMode="Default" UnboundType="DateTime"/>
                 <!--<dxg:GridColumn.EditSettings>
                         <dxe:DateEditSettings AllowNullInput="True" NullText="N/A"/>
                     </dxg:GridColumn.EditSettings>
                 </dxg:GridColumn>-->
 
-                <dxg:GridColumn FieldName="ProviderId" Header="Поставщик" EditFormCaption="Поставщик"/>
+                <dxg:GridColumn IsSmart="True" FieldName="PROVIDER_ID" Header="Поставщик" EditFormCaption="Поставщик"/>
                 <!--<dxg:GridColumn.EditSettings>
                         <dxg:LookUpEditSettings ItemsSource="{Binding Path=(services:DataRepository.Providers)}" 
                                                 AutoComplete="True" 
@@ -146,8 +160,8 @@
                                 <ControlTemplate>
                                     <dxg:GridControl Name="PART_GridControl">
                                         <dxg:GridControl.Columns>
-                                            <dxg:GridColumn FieldName="Id" Header="Идентификатор"/>
-                                            <dxg:GridColumn FieldName="Name" Header="наименование"/>
+                                            <dxg:GridColumn IsSmart="True" FieldName="Id" Header="Идентификатор"/>
+                                            <dxg:GridColumn IsSmart="True" FieldName="Name" Header="наименование"/>
                                         </dxg:GridControl.Columns>
                                         <dxg:GridControl.View>
                                             <dxg:TableView AutoWidth="True" ShowSearchPanelMode="Always"/>
@@ -162,7 +176,7 @@
                     </dxg:GridColumn.EditSettings>
                 </dxg:GridColumn>-->
 
-                <dxg:GridColumn FieldName="CompanyId" Header="Компания"/>
+                <dxg:GridColumn IsSmart="True" FieldName="COMPANY_ID" Header="Компания"/>
                 <!--<dxg:GridColumn.EditSettings>
                         <dxg:LookUpEditSettings ItemsSource="{Binding Path=(services:DataRepository.Companies)}" 
                                                 AutoComplete="True" 
@@ -177,8 +191,8 @@
                                 <ControlTemplate>
                                     <dxg:GridControl Name="PART_GridControl">
                                         <dxg:GridControl.Columns>
-                                            <dxg:GridColumn FieldName="Id" Header="Идентификатор"/>
-                                            <dxg:GridColumn FieldName="Name" Header="наименование"/>
+                                            <dxg:GridColumn IsSmart="True" FieldName="Id" Header="Идентификатор"/>
+                                            <dxg:GridColumn IsSmart="True" FieldName="Name" Header="наименование"/>
                                         </dxg:GridControl.Columns>
                                         <dxg:GridControl.View>
                                             <dxg:TableView AutoWidth="True" ShowSearchPanelMode="Always"/>
@@ -193,7 +207,7 @@
                     </dxg:GridColumn.EditSettings>
                 </dxg:GridColumn>-->
 
-                <dxg:GridColumn FieldName="ItemId" Header="Статья" EditFormCaption="Статья"/>
+                <dxg:GridColumn IsSmart="True" FieldName="ITEM_ID" Header="Статья" EditFormCaption="Статья"/>
                 <!--<dxg:GridColumn.EditSettings>
                         <dxg:LookUpEditSettings ItemsSource="{Binding Path=(services:DataRepository.Items)}" 
                                                 AutoComplete="True" 
@@ -208,8 +222,8 @@
                                 <ControlTemplate>
                                     <dxg:GridControl Name="PART_GridControl">
                                         <dxg:GridControl.Columns>
-                                            <dxg:GridColumn FieldName="Id" Header="Идентификатор"/>
-                                            <dxg:GridColumn FieldName="Name" Header="наименование"/>
+                                            <dxg:GridColumn IsSmart="True" FieldName="Id" Header="Идентификатор"/>
+                                            <dxg:GridColumn IsSmart="True" FieldName="Name" Header="наименование"/>
                                         </dxg:GridControl.Columns>
                                         <dxg:GridControl.View>
                                             <dxg:TableView AutoWidth="True" ShowSearchPanelMode="Always"/>
@@ -224,21 +238,21 @@
                     </dxg:GridColumn.EditSettings>
                 </dxg:GridColumn>-->
 
-                <dxg:GridColumn FieldName="Comments" Header="Примечания"/>
+                <dxg:GridColumn IsSmart="True" FieldName="COMMENTS" Header="Примечания"/>
 
-                <dxg:GridColumn Header="Факт" FieldName="FactSum" UnboundType="Decimal" />
+                <dxg:GridColumn IsSmart="True" Header="Факт" FieldName="FACT_SUM" UnboundType="Decimal" />
                 <!--<dxg:GridColumn.EditSettings>
                     <dxe:TextEditSettings MaskType="Numeric" Mask="N2" MaskUseAsDisplayFormat="True"/>
                 </dxg:GridColumn.EditSettings>-->
 
 
-                <dxg:GridColumn Header="План" FieldName="PlanSum" UnboundType="Decimal"/>
+                <dxg:GridColumn IsSmart="True" Header="План" FieldName="PLAN_SUM" UnboundType="Decimal"/>
                 <!--<dxg:GridColumn.EditSettings>
                         <dxe:TextEditSettings MaskType="Numeric" Mask="n2" MaskUseAsDisplayFormat="True"/>
                     </dxg:GridColumn.EditSettings>
                 </dxg:GridColumn>-->
 
-                <dxg:GridColumn FieldName="InvoiceId" Header="№ СФ"/>
+                <dxg:GridColumn IsSmart="True" FieldName="INVOICE_ID" Header="№ СФ"/>
                 <!--<dxg:GridColumn.EditSettings>
                         <dxg:LookUpEditSettings ItemsSource="{Binding Path=(services:DataRepository.Invoices)}" 
                                                 AutoComplete="True" 
@@ -253,8 +267,8 @@
                                 <ControlTemplate>
                                     <dxg:GridControl Name="PART_GridControl">
                                         <dxg:GridControl.Columns>
-                                            <dxg:GridColumn FieldName="Id" Header="Идентификатор"/>
-                                            <dxg:GridColumn FieldName="Name" Header="наименование"/>
+                                            <dxg:GridColumn IsSmart="True" FieldName="Id" Header="Идентификатор"/>
+                                            <dxg:GridColumn IsSmart="True" FieldName="Name" Header="наименование"/>
                                         </dxg:GridControl.Columns>
                                         <dxg:GridControl.View>
                                             <dxg:TableView AutoWidth="True" ShowSearchPanelMode="Always"/>
@@ -269,7 +283,7 @@
                     </dxg:GridColumn.EditSettings>
                 </dxg:GridColumn>-->
 
-                <dxg:GridColumn FieldName="PaymentMethodId" Header="Способ оплаты"/>
+                <dxg:GridColumn IsSmart="True" FieldName="PAYMENT_METHOD_ID" Header="Способ оплаты"/>
                 <!--<dxg:GridColumn.EditSettings>
                         <dxg:LookUpEditSettings ItemsSource="{Binding Path=(services:DataRepository.PaymentMethods)}" 
                                                 AutoComplete="True" 
@@ -284,8 +298,8 @@
                                 <ControlTemplate>
                                     <dxg:GridControl Name="PART_GridControl">
                                         <dxg:GridControl.Columns>
-                                            <dxg:GridColumn FieldName="Id" Header="Идентификатор"/>
-                                            <dxg:GridColumn FieldName="Name" Header="наименование"/>
+                                            <dxg:GridColumn IsSmart="True" FieldName="Id" Header="Идентификатор"/>
+                                            <dxg:GridColumn IsSmart="True" FieldName="Name" Header="наименование"/>
                                         </dxg:GridControl.Columns>
                                         <dxg:GridControl.View>
                                             <dxg:TableView AutoWidth="True" ShowSearchPanelMode="Always"/>
@@ -300,13 +314,13 @@
                     </dxg:GridColumn.EditSettings>
                 </dxg:GridColumn>-->
 
-                <dxg:GridColumn FieldName="HasOriginal" Header="Оригинал"/>
+                <dxg:GridColumn IsSmart="True" FieldName="HAS_ORIGINAL" Header="Оригинал"/>
                 <!--<dxg:GridColumn.EditSettings>
                     <dxe:CheckEditSettings/>
                 </dxg:GridColumn.EditSettings>-->
 
 
-                <dxg:GridColumn FieldName="HasScan" Header="Скан"/>
+                <dxg:GridColumn IsSmart="True" FieldName="HAS_SCAN" Header="Скан"/>
                 <!--<dxg:GridColumn.EditSettings>
                         <dxe:CheckEditSettings/>
                     </dxg:GridColumn.EditSettings>
@@ -318,12 +332,12 @@
                                AllowEditing="False" 
                                BestFitMode="AllRows"    
                                NavigationStyle="Row"
-                               ShowGroupPanel="True">
-                    <dxmvvm:Interaction.Behaviors>
-                        <dxmvvm:EventToCommand EventName="RowUpdated" Command="{Binding SaveCommand}" PassEventArgsToCommand="False" />
-                    </dxmvvm:Interaction.Behaviors>
+                               ShowGroupPanel="True"
+                               >
+
                 </dxg:TableView>
             </dxg:GridControl.View>
+            
         </dxg:GridControl>
     </Grid>
-</Window>
+</Page>
