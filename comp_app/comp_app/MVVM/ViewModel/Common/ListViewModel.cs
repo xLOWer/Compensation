@@ -15,8 +15,9 @@ namespace comp_app.MVVM.ViewModel.Common
         IListViewModel<TEntity, TSingleView, TView> where TView : new()
         where TEntity : IRef, new()
     {
-        public ListViewModel()
+        public ListViewModel(ref TView _view)
         {
+            View = _view;
             Refresh();
         }
         private List<TEntity> _Items = new List<TEntity>();
@@ -51,7 +52,10 @@ namespace comp_app.MVVM.ViewModel.Common
 
         public virtual void AddNew(object o = null)
         {
-            TabService.NewTab((Page)typeof(TView).GetConstructors().FirstOrDefault().Invoke(new object[] { new TEntity() }), $"Новый документ");
+            var a = typeof(TSingleView).GetConstructors();
+                var b = a.FirstOrDefault(x =>x.IsConstructor);
+                var c = (Page)b.Invoke(new object[] { null });
+            TabService.NewTab(c, $"Новый документ");
         }
         public virtual void Delete(object o = null)
         {
@@ -59,12 +63,12 @@ namespace comp_app.MVVM.ViewModel.Common
                 if (SelectedItems.Count > 0)
                     foreach (var item in SelectedItems)                    
                         DataRepository.Remove(item);
-
             Refresh();
         }
 
         public virtual void Refresh(object o = null)
         {
+            DataRepository.Refresh<TEntity>();
             Items = DataRepository.Get<TEntity>();
         }
     }

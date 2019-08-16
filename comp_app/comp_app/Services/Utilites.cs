@@ -1,5 +1,7 @@
 ﻿using comp_app.AppSettings;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -85,7 +87,39 @@ namespace comp_app.Services
             return decompress_text;//
         }
 
+        public static void TestDbLoadingSpeed(string name, Action act, int count)
+        {
+            List<double> ret = new List<double>();
+            Stopwatch watch = new Stopwatch();
+            int i = 0;
+            for (; i < count; i++)
+            {
+                watch.Reset();
+                watch.Start();
 
+                try
+                {
+                    act.Invoke();
+                }
+                catch (Exception ex)
+                {
+                    watch.Stop();
+                    Utilites.Error(ex);
+                }
+                finally
+                {
+                    watch.Stop();
+                    ret.Add((double)watch.ElapsedMilliseconds / 1000);
+                }
+            }
+            MessageBox.Show(
+                $@"{name}
+число запусков: {count}
+суммарное время: {ret.Sum(x => x)}
+максимальное время: {ret.Max(x => x)}
+минимальное время: {ret.Min(x => x)}
+среднее время: {ret.Average(x => x)}");
+        }
 
 
         public static string xorIt(string text, string key)

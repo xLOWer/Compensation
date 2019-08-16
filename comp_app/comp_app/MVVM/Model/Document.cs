@@ -1,6 +1,7 @@
 ﻿using comp_app.MVVM.Model.Common;
 using comp_app.Services;
 using System;
+using System.Linq;
 
 namespace comp_app.MVVM.Model
 {
@@ -12,7 +13,7 @@ namespace comp_app.MVVM.Model
     {
         public Document WithNewId()
         {
-            ID = DataRepository.Max<Document>(x => x.ID);
+            ID = DataRepository.Get<Document>().Max(x => x.ID) + 1;
             return this;
         }
 
@@ -38,8 +39,8 @@ namespace comp_app.MVVM.Model
             PLAN_SUM = 0;
             INVOICE_ID = 0;
             PAYMENT_METHOD_ID = 0;
-            HAS_ORIGINAL = new __bool();
-            HAS_SCAN = new __bool();
+            HAS_ORIGINAL = "0";
+            HAS_SCAN = "0";
             DOCUMENT_DATE_TIME = "";
             COMPENSATION_DATE = "";
 
@@ -113,12 +114,12 @@ namespace comp_app.MVVM.Model
         /// <summary>
         /// Имеется ли оригинал
         /// </summary>
-        public __bool HAS_ORIGINAL { get; set; }
+        public string HAS_ORIGINAL { get; set; }
 
         /// <summary>
         /// Имеется ли скан
         /// </summary>
-        public __bool HAS_SCAN { get; set; }
+        public string HAS_SCAN { get; set; }
         /// <summary>
         /// Дата документа 
         /// </summary>

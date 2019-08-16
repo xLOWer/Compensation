@@ -188,7 +188,6 @@
     </Compile>
     <Compile Include="MVVM\Model\Common\AppConfig.cs" />
     <Compile Include="MVVM\Model\Common\IRef.cs" />
-    <Compile Include="MVVM\Model\Common\MyBool.cs" />
     <Compile Include="MVVM\Model\Common\OracleTableAttribute.cs" />
     <Compile Include="MVVM\ViewModel\AuthViewModel.cs" />
     <Compile Include="MVVM\ViewModel\Common\IListViewModel.cs" />

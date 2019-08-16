@@ -4,9 +4,11 @@ using comp_app.MVVM.Model.Common;
 using comp_app.MVVM.View;
 using comp_app.MVVM.ViewModel;
 using comp_app.Services;
+using Devart.Data.Oracle;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -22,11 +24,9 @@ namespace comp_app
     {
         public App()
         {
-            AppConfigHandler.Load();
-            AppConfigHandler.ConfigureOracle();
-            //DbService.InsertNewEntity(new Document() { ID = 3, NAME = "name3" });
-            DataRepository.LoadAll();
-            DataRepository.LazyLoad<Document>();
+            //AppConfigHandler.Load();
+            //AppConfigHandler.ConfigureOracle();            
+            //DataRepository.LoadAll();
 
             CultureInfo culture = CultureInfo.CreateSpecificCulture("ru-RU");
 

@@ -13,6 +13,5 @@ namespace comp_app.MVVM.ViewModel.Common
         void Save(object o = null);
         void Cancel(object o = null);
         void Delete(object o = null);
-        void Refresh(object o = null);
     }
 }

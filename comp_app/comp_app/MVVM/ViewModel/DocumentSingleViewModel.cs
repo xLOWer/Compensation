@@ -12,10 +12,8 @@ namespace comp_app.MVVM.ViewModel
 {
     public class DocumentSingleViewModel : SingleViewModel<Document, DocumentSingleWindow, DocumentListWindow>
     {
-        public DocumentSingleViewModel(Document _document, ref DocumentSingleWindow _view)
+        public DocumentSingleViewModel(Document _document, ref DocumentSingleWindow _view) : base(_document, ref _view)
         {
-            Item = _document;
-            View = _view;
         }
     }
 }

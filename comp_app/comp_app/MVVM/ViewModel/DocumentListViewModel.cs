@@ -9,9 +9,8 @@ namespace comp_app.MVVM.ViewModel
 {
     public class DocumentListViewModel : ListViewModel<Document, DocumentListWindow, DocumentSingleWindow>
     {
-        public DocumentListViewModel(ref DocumentListWindow _view)
+        public DocumentListViewModel(ref DocumentListWindow _view) : base(ref _view)
         {
-            View = _view;
         }     
     }
 }
