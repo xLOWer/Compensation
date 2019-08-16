@@ -29,14 +29,14 @@ namespace comp_app.Services
             //TestDbLoadingSpeed("GetEntityList", () => { Set(DbService.GetEntityList<Document>()); }, 100);
 
             Set(DbService.SelectEntity<Document>());
-            //Set(DbService.GetEntityList<Company>());
-            //Set(DbService.GetEntityList<Status>());
-            //Set(DbService.GetEntityList<Provider>());
-            //Set(DbService.GetEntityList<PaymentMethod>());
-            //Set(DbService.GetEntityList<Item>());
-            //Set(DbService.GetEntityList<Invoice>());
+            Set(DbService.SelectEntity<Status>());
+            //Set(DbService.SelectEntity<Company>());
+            //Set(DbService.SelectEntity<Provider>());
+            //Set(DbService.SelectEntity<PaymentMethod>());
+            //Set(DbService.SelectEntity<Item>());
+            //Set(DbService.SelectEntity<Invoice>());
         }
-        
+
         public static void Set<T>(List<T> value)
         {
             if (value == null) return;

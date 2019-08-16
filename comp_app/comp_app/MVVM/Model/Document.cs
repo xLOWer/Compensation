@@ -8,7 +8,7 @@ namespace comp_app.MVVM.Model
     /// <summary>
     /// Документ
     /// </summary>
-    [OracleTable(TableName = "COMP_DOCUMENT", SchemeName = "DEVELOPER3")]
+    [OracleTable(TableName = "COMP_DOCUMENT")]
     public class Document : IRef
     {
         public Document WithNewId()
@@ -41,8 +41,8 @@ namespace comp_app.MVVM.Model
             PAYMENT_METHOD_ID = 0;
             HAS_ORIGINAL = "0";
             HAS_SCAN = "0";
-            DOCUMENT_DATE_TIME = "";
-            COMPENSATION_DATE = "";
+            DOCUMENT_DATE_TIME = DbService.OracleConvert.ToOracleDateTimeString(DateTime.Now);
+            COMPENSATION_DATE = DbService.OracleConvert.ToOracleDateTimeString(DateTime.Now);
 
         }
 
@@ -114,12 +114,47 @@ namespace comp_app.MVVM.Model
         /// <summary>
         /// Имеется ли оригинал
         /// </summary>
-        public string HAS_ORIGINAL { get; set; }
+        public string HAS_ORIGINAL
+        {
+            get => 
+                new string[] { "1", "TRUE", "YES", "Y", "T" }
+                .Any(x => x == __HAS_ORIGINAL.ToUpper()) 
+                // если в хранимом свойстве лежит нечто похожее на правду
+                ? "1" //возвращаем 1 как строку
+                : "0"; // иначе 0 как строку
+
+            set
+            {
+                __HAS_ORIGINAL = 
+                    new string[] { "1", "TRUE", "YES", "Y", "T" }.Any(x => x == value.ToUpper()) 
+                    ? "1" 
+                    : "0";
+            }
+        }
+        private string __HAS_ORIGINAL;
 
         /// <summary>
         /// Имеется ли скан
         /// </summary>
-        public string HAS_SCAN { get; set; }
+        public string HAS_SCAN
+        {
+            get => 
+                new string[] { "1", "TRUE", "YES", "Y", "T" }
+                .Any(x => x == __HAS_SCAN.ToUpper())
+                // если в хранимом свойстве лежит нечто похожее на правду
+                ? "1" //возвращаем 1 как строку
+                : "0"; // иначе 0 как строку
+
+            set
+            {
+                __HAS_SCAN = 
+                    new string[] { "1", "TRUE", "YES", "Y", "T" }.Any(x => x == value.ToUpper())
+                    ? "1" 
+                    : "0";
+            }
+        }
+        private string __HAS_SCAN;
+
         /// <summary>
         /// Дата документа 
         /// </summary>

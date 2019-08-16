@@ -157,29 +157,54 @@ namespace comp_app.Services
 
 
 
-        internal static class Sqls
+        internal static class OracleConvert
         {
             //internal static string SelectJsonString(string SchemeName, string TableName) => $"SELECT {SchemeName}.get_json('select * from {SchemeName}.{TableName}') json FROM dual";
 
-            internal static string DatesBetween(DateTime Date)
-                => $" BETWEEN {OracleDateFormat(Date)} AND {OracleDateFormat(Date)} ";
+            internal static string ToOracleDatesBetweenString(DateTime Date)
+                => $" BETWEEN {ToOracleVarcharDateString(Date)} AND {ToOracleVarcharDateString(Date)} ";
 
-            internal static string DatesBetween(DateTime DateFrom, DateTime DateTo)
-                => $" BETWEEN {OracleDateFormat(DateFrom)} AND {OracleDateFormat(DateTo)} ";
+            internal static string ToOracleDatesBetweenString(DateTime DateFrom, DateTime DateTo)
+                => $" BETWEEN {ToOracleVarcharDateString(DateFrom)} AND {ToOracleVarcharDateString(DateTo)} ";
 
-            internal static string OracleDateFormat(DateTime Date) => $" TO_DATE('{Date.Day}/{Date.Month}/{Date.Year}','DD/MM/YYYY') ";
+            internal static string ToOracleVarcharDateString(DateTime Date) => $" TO_DATE('{Date.Day}/{Date.Month}/{Date.Year}','DD/MM/YYYY') ";
 
-            internal static string Sql_DateRange(string tableName, string fieldName, string sign, DateTime date1)
-                => $"{tableName}.{fieldName} = {OracleDateFormat(date1)}\n";
+            internal static string ToOracleFieldDatesBetweenString(string shortTableName, string fieldName, string sign, DateTime date1, DateTime date2)
+                => $"{shortTableName}.{fieldName} {ToOracleDatesBetweenString(date1, date2)}\n";
 
-            internal static string Sql_DateRange(string shortTableName, string fieldName, string sign, DateTime date1, DateTime date2)
-                => $"{shortTableName}.{fieldName} {DatesBetween(date1, date2)}\n";
-
-            internal static string ToOracleDate(DateTime Date)
+            /// <summary>
+            /// Преобразовывает System.DateTime в строку даты-время Oracle
+            /// </summary>
+            /// <param name="Date"></param>
+            /// <returns>Возвращает строку в формате DD.MM. YYYY HH24:mi:ss</returns>
+            internal static string ToOracleDateTimeString(DateTime Date)
             {
                 var day = Date.Day < 10 ? $"0{Date.Day}" : Date.Day.ToString();
                 var mouth = Date.Month < 10 ? $"0{Date.Month}" : Date.Month.ToString();
-                return $"{day}.{mouth}. {Date.Year} {Date.Hour}:{Date.Minute}:{Date.Second}";
+                return $"{day}.{mouth}.{Date.Year} {Date.Hour}:{Date.Minute}:{Date.Second}";
+            }
+
+
+            internal static DateTime ToDateTime(string OracleDateString, string format)
+            {
+                DateTime ret = DateTime.Now;
+                try
+                {
+                    ret = DateTime.ParseExact(OracleDateString, format, null);
+                }
+                catch (Exception ex) { }
+                return ret;
+            }
+
+            internal static DateTime ToDateTime(string OracleDateString)
+            {
+                DateTime ret = DateTime.Now;
+                try
+                {
+                    ret = DateTime.ParseExact(OracleDateString, "d.M.yyyy H:mm:ss", null);
+                }
+                catch (Exception ex) { }
+                return ret;
             }
         }
 

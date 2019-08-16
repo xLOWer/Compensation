@@ -40,23 +40,16 @@ namespace comp_app.MVVM.ViewModel.Common
         {                      
             if (SelectedItems != null)
                 if (SelectedItems.Count > 0)
-                    foreach (var item in SelectedItems)
-                    {
-                        var cts = typeof(TSingleView).GetConstructors();
-                        var ct = cts.FirstOrDefault();
-                        var ivnct = ct.Invoke(new object[] { item });
-
-                        TabService.NewTab((Page)ivnct, $"{item.ID}");
-                    }
+                    foreach (var item in SelectedItems) // создадм по вкладке на каждый выбранный объект                    
+                        TabService.NewTab((Page)typeof(TSingleView).GetConstructors().FirstOrDefault().Invoke(new object[] { item }), $"Документ {item.ID}");
+                    
         }
 
         public virtual void AddNew(object o = null)
         {
-            var a = typeof(TSingleView).GetConstructors();
-                var b = a.FirstOrDefault(x =>x.IsConstructor);
-                var c = (Page)b.Invoke(new object[] { null });
-            TabService.NewTab(c, $"Новый документ");
+            TabService.NewTab((Page)typeof(TSingleView).GetConstructors().FirstOrDefault(x => x.IsConstructor).Invoke(new object[] { null }), $"Новый документ");
         }
+
         public virtual void Delete(object o = null)
         {
             if (SelectedItems != null)

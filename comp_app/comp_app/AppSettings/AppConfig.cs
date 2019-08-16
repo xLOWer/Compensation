@@ -10,7 +10,7 @@
         public static string DbSID { get; set; } = "orcl.vladivostok.wera"; // имя сервиса 
         public static string DbHost { get; set; } = "192.168.2.13"; // ip/хост базы 
 
-        public static string Schema { get; set; } = "";
+        public static string Schema { get; set; } = "DEVELOPER3";
         public static string connString => $"Data Source=(DESCRIPTION =(ADDRESS = (PROTOCOL = TCP)(HOST = {DbHost})(PORT = {DbPort}))(CONNECT_DATA = "
                                + $"(SERVER = DEDICATED)(SERVICE_NAME = {DbSID})));Password={DbUserPassword};User ID={DbUserName}";
 

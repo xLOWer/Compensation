@@ -15,6 +15,7 @@ namespace comp_app.MVVM.ViewModel
         {
             LoadConfig();
             View = _view;
+            Login();
         }
 
         public CommandService LoginCommand => new CommandService(Login);

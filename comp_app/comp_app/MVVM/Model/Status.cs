@@ -5,6 +5,7 @@ namespace comp_app.MVVM.Model
     /// <summary>
     /// Статус документа
     /// </summary>
+    [OracleTable(TableName = "COMP_STATUS")]
     public class Status : IRef
     {
         /// <summary>

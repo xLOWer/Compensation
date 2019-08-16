@@ -29,7 +29,6 @@ namespace comp_app
             //DataRepository.LoadAll();
 
             CultureInfo culture = CultureInfo.CreateSpecificCulture("ru-RU");
-
             Thread.CurrentThread.CurrentUICulture = culture;
             Thread.CurrentThread.CurrentCulture = culture;
             System.Threading.Thread.CurrentThread.CurrentUICulture = culture;

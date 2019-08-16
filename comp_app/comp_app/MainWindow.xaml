@@ -10,7 +10,7 @@
         xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
         xmlns:lc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
         xmlns:local="clr-namespace:comp_app"
-        xmlns:set="clr-namespace:comp_app.AppSettings"
+        xmlns:settings="clr-namespace:comp_app.AppSettings"
         xmlns:services="clr-namespace:comp_app.Services"
         mc:Ignorable="d"
         Title="MainWindow" 
@@ -18,7 +18,7 @@
         Width="Auto" 
         Name="mainWindow"
         WindowState="Maximized"
-        dx:ThemeManager.ThemeName="{x:Static set:AppConfig.ThemeName}">
+        dx:ThemeManager.ThemeName="{x:Static settings:AppConfig.ThemeName}">
     <dxmvvm:Interaction.Behaviors>
         <dxmvvm:EventToCommand EventName="Closed" 
                                        Command="{Binding CloseCommand}"   
@@ -69,15 +69,35 @@
             </dx:DXTabControl.View>
         </dx:DXTabControl>
 
-        <dxb:BarContainerControl ContainerType="Bottom" Grid.Row="2">
+        <dxb:BarContainerControl ContainerType="Bottom" Height="26" Grid.Row="2">
             <dxb:StatusBarControl Caption="Status Bar">
 
-                <!--<dxb:BarStaticItem Content="Юзер:"/>
+                <dxb:BarStaticItem Content="Юзер:"/>
                 <dxb:BarEditItem Content="{x:Static settings:AppConfig.DbUserName}"/>
-                <dxb:BarItemSeparator/>-->
+                <dxb:BarItemSeparator/>
+
+                <dxb:BarStaticItem Content="Хост:"/>
+                <dxb:BarEditItem Content="{Binding Path=(settings:AppConfig.DbHost)}"/>
+                <dxb:BarItemSeparator/>
+
+                <dxb:BarStaticItem Content="Логирование:"/>
+                <dxb:BarEditItem Content="{Binding Path=(settings:AppConfig.EnableLogging)}"/>
+                <dxb:BarItemSeparator/>
+
+                <!--<dxb:BarButtonItem x:Name="CommonSettings" Content="Настройки" Command="{Binding OpenCommonSettingsCommand}" Glyph="~\..\Images\config.png" Alignment="Far"/>
+                <dxb:BarButtonItem x:Name="License" Content="Лицензия" ItemClick="License_Click" Glyph="~\..\Images\license.png" Alignment="Far"/>
+                <dxb:BarButtonItem x:Name="About" Content="О программе" ItemClick="About_Click" Glyph="~\..\Images\info.png" Alignment="Far"/>-->
+
+                <!--<dxb:BarItemSeparator Alignment="Far"/>
+                <dxb:BarEditItem  Content="темная тема" Alignment="Far" EditValue="{Binding IsNightTheme}">
+                    <dxb:BarEditItem.EditSettings>
+                        <dxe:CheckEditSettings/>
+                    </dxb:BarEditItem.EditSettings>
+                    </dxb:BarEditItem>-->
+
 
             </dxb:StatusBarControl>
         </dxb:BarContainerControl>
 
-        </Grid>
+    </Grid>
 </Window>

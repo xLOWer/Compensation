@@ -82,8 +82,9 @@
             </dxmvvm:Interaction.Behaviors>
             <dxg:GridControl.Columns>
 
-                <dxg:GridColumn IsSmart="True" Header="Статус" FieldName="STATUS_ID"/>
-                <!--<dxg:GridColumn.EditSettings>
+                <dxg:GridColumn IsSmart="True" Header="Номер" FieldName="ID"/>
+                <dxg:GridColumn IsSmart="True" Header="Статус" FieldName="STATUS_ID">
+                    <dxg:GridColumn.EditSettings>
                         <dxg:LookUpEditSettings ItemsSource="{Binding Path=(services:DataRepository.Statuses)}" 
                                                 AutoComplete="True" 
                                                 ShowSizeGrip="True" 
@@ -93,25 +94,12 @@
                                                 IsPopupAutoWidth="False" 
                                                 DisplayMember="Name"
                                                 ValueMember="Id">
-                            <dxg:LookUpEditSettings.PopupContentTemplate>
-                                <ControlTemplate>
-                                    <dxg:GridControl Name="PART_GridControl">
-                                        <dxg:GridControl.Columns>
-                                            <dxg:GridColumn IsSmart="True" FieldName="Id" Header="Идентификатор"/>
-                                            <dxg:GridColumn IsSmart="True" FieldName="Name" Header="наименование"/>
-                                        </dxg:GridControl.Columns>
-                                        <dxg:GridControl.View>
-                                            <dxg:TableView AutoWidth="True" ShowSearchPanelMode="Always"/>
-                                        </dxg:GridControl.View>
-                                    </dxg:GridControl>
-                                </ControlTemplate>
-                            </dxg:LookUpEditSettings.PopupContentTemplate>
                             <dxg:LookUpEditSettings.StyleSettings>
                                 <dxg:SearchLookUpEditStyleSettings/>
                             </dxg:LookUpEditSettings.StyleSettings>
                         </dxg:LookUpEditSettings>
                     </dxg:GridColumn.EditSettings>
-                </dxg:GridColumn>-->
+                </dxg:GridColumn>
 
                 <dxg:GridColumn IsSmart="True"  FieldName="CLEARANCE_MOUNTH"  Header="Месяц оформления" BestFitMode="Default" UnboundType="DateTime"/>
                 <!--<dxg:GridColumn.EditSettings>
@@ -139,11 +127,11 @@
                     </dxg:GridColumn.EditSettings>
                 </dxg:GridColumn>-->
 
-                <dxg:GridColumn IsSmart="True" Header="Дата компенсации" FieldName="DOCUMENT_DATE_TIME" BestFitMode="Default" UnboundType="DateTime"/>
-                <!--<dxg:GridColumn.EditSettings>
+                <dxg:GridColumn IsSmart="True" Header="Дата компенсации" FieldName="DOCUMENT_DATE_TIME" BestFitMode="Default" UnboundType="DateTime">
+                <dxg:GridColumn.EditSettings>
                         <dxe:DateEditSettings AllowNullInput="True" NullText="N/A"/>
                     </dxg:GridColumn.EditSettings>
-                </dxg:GridColumn>-->
+                </dxg:GridColumn>
 
                 <dxg:GridColumn IsSmart="True" FieldName="PROVIDER_ID" Header="Поставщик" EditFormCaption="Поставщик"/>
                 <!--<dxg:GridColumn.EditSettings>

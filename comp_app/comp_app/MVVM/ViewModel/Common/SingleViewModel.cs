@@ -2,11 +2,8 @@
 using comp_app.Services;
 using DevExpress.Xpf.Core;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Windows.Controls;
+using System.Reflection;
+using System.Windows;
 
 namespace comp_app.MVVM.ViewModel.Common
 {
@@ -16,23 +13,60 @@ namespace comp_app.MVVM.ViewModel.Common
     {
         public SingleViewModel(TEntity item, ref TView _view)
         {
+            _OnOpenState = Activator.CreateInstance<TEntity>();
             View = _view;
-            newFlag = item == null;
 
-            if (item == null)            
-                Item = Activator.CreateInstance<TEntity>();            
-            else            
-                Item = item;
-            
-            _OnOpenState = Item;
+            // если в item попадает Null, то считается, что окно создаёт новую сущность, 
+            // а иначе редактирует существующую
+            newFlag = item == null; 
+
+            if (item == null) Item = Activator.CreateInstance<TEntity>();            
+            else Item = item;
+
+            Set_OnOpenState();
         }
 
+        /// <summary>
+        /// Устанвливает все поля главной сущности в сущность-состояние, 
+        /// которая отражает начальное состояние главной сущности чтобы 
+        /// узнать, изменялась ли главная сущность.
+        /// </summary>
+        public void Set_OnOpenState()
+        {
+            foreach (var pr in typeof(TEntity).GetProperties(BindingFlags.Public | BindingFlags.Instance))
+                pr.SetValue(_OnOpenState, pr.GetValue(Item, null), null);
+        }
+
+        /// <summary>
+        /// Флаг, показывающий является ли сущность новой созданной или открытой существующей.
+        /// Необходимо для понимания способа сохранения.
+        /// </summary>
         public bool newFlag { get; set; } = true;
-        public bool IsEdited { get => !Item.Equals(_OnOpenState); } 
+
+        /// <summary>
+        /// Путём сравнения всех свойств определяет одинаковы ли главная сущность и сущность-состояние. 
+        /// </summary>
+        /// <returns>Возвращает true, если после открытия или сохранения главная сущность изменялась</returns>
+        public bool IsEquals()
+        {
+            foreach(var pr in typeof(TEntity).GetProperties(BindingFlags.Public | BindingFlags.Instance))            
+                if (!pr.GetValue(Item, null).Equals(pr.GetValue(_OnOpenState, null)))
+                    return false;
+            return true;
+        }
+
+        /// <summary>
+        /// Сущность-состояние.
+        /// Отражает начальное состояние главной сущности после открытия или последнего сохранения
+        /// </summary>
         public TEntity _OnOpenState { get; set; }
 
-        private TEntity _Item;
+        /// <summary>
+        /// Главная сущность.
+        /// Отражает редактируемый или создающийся объект
+        /// </summary>
         public TEntity Item { get => _Item; set { _Item = value; NotifyPropertyChanged("Item"); } }
+        private TEntity _Item;
 
         public CommandService SaveCommand => new CommandService(Save);
         public CommandService CancelCommand => new CommandService(Cancel);
@@ -40,34 +74,59 @@ namespace comp_app.MVVM.ViewModel.Common
 
         public virtual void Save(object o = null)
         {
-            if(DXMessageBox.Show("Подтверждаете сохранение изменённых данных?", "Сохранение", System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.Question) 
-                == System.Windows.MessageBoxResult.Yes)
+            var saveResult =
+                DXMessageBox.Show("Подтверждаете сохранение изменённых данных?",
+                                  "Сохранение",
+                                  MessageBoxButton.YesNo,
+                                  MessageBoxImage.Question);
+            if (saveResult  == MessageBoxResult.Yes)
             {
-                if (newFlag)
+                if (!IsEquals())
                 {
-                    DataRepository.Add(Item);
-                }
-                else
-                {
-                    DataRepository.Update(Item);
-                }
+                    if (newFlag) DataRepository.Add(Item);                    
+                    else DataRepository.Update(Item);
+                    Set_OnOpenState();
+                    newFlag = false;
+                }                    
             }
-
         }
 
         public virtual void Cancel(object o = null)
         {
-            if (DXMessageBox.Show("Закрыть текущую вкладку?", "Закрыть", System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.Question)
-                == System.Windows.MessageBoxResult.Yes)
+            if (IsEquals())
             {
-
-            }
                 TabService.CloseTab(View);
+                return;
+            }
+
+            var saveResult = 
+                DXMessageBox.Show("Подтверждаете сохранение изменённых данных?", 
+                                  "Сохранение",
+                                  MessageBoxButton.YesNo,
+                                  MessageBoxImage.Question);
+
+            if (saveResult == MessageBoxResult.Yes)
+            {
+                if (newFlag) DataRepository.Add(Item);
+                else DataRepository.Update(Item);
+            }
+            TabService.CloseTab(View);
+
         }
 
         public virtual void Delete(object o = null)
         {
+            var saveResult = 
+                DXMessageBox.Show("Подтверждаете удаление?", 
+                                  "Удаление",
+                                  MessageBoxButton.YesNo,
+                                  MessageBoxImage.Warning);
 
+            if (saveResult == MessageBoxResult.Yes)
+            {
+                if (!newFlag) DataRepository.Remove(Item);                
+                TabService.CloseTab(View);
+            }
         }
 
 

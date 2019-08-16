@@ -11,6 +11,7 @@ namespace comp_app.MVVM.ViewModel
     {
         public DocumentListViewModel(ref DocumentListWindow _view) : base(ref _view)
         {
+            DataRepository.Refresh<Status>();
         }     
     }
 }
