@@ -16,14 +16,14 @@ using System.Windows.Shapes;
 namespace comp_app.MVVM.View
 {
     /// <summary>
-    /// Логика взаимодействия для DocumentSingleWindow.xaml
+    /// Логика взаимодействия для DocumentSingleView.xaml
     /// </summary>
-    public partial class DocumentSingleWindow : Page
+    public partial class DocumentSingleView : Page
     {
-        public DocumentSingleWindow(Document _document)
+        public DocumentSingleView(Document _document)
         {
             InitializeComponent();
-            this.DataContext = new DocumentSingleViewModel(_document, ref docWindow);
+            this.DataContext = new DocumentSingleViewModel(_document, ref docView);
         }        
     }
 }

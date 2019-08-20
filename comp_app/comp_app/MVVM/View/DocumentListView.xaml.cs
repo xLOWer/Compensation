@@ -10,12 +10,12 @@ namespace comp_app.MVVM.View
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
-    public partial class DocumentListWindow : Page
+    public partial class DocumentListView : Page
     {
-        public DocumentListWindow()
+        public DocumentListView()
         {
             InitializeComponent();
-            this.DataContext = new DocumentListViewModel(ref docListWindow);
+            this.DataContext = new DocumentListViewModel(ref docListView);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿<Page x:Class="comp_app.MVVM.View.DocumentListWindow"
+﻿<Page x:Class="comp_app.MVVM.View.DocumentListView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -15,8 +15,8 @@
         xmlns:set="clr-namespace:comp_app.AppSettings"
         dx:ThemeManager.ThemeName="{x:Static set:AppConfig.ThemeName}"
         mc:Ignorable="d"
-        Name="docListWindow"
-        Title="DocumentListWindow" Height="850" Width="1200">
+        Name="docListView"
+        Title="DocumentListView" Height="850" Width="1200">
 
     <Page.Resources>
         <ResourceDictionary>
@@ -26,6 +26,7 @@
             <!--<conv:StringToDateTimeConverter x:Key="StringToDateTimeConverter"/>-->
             <conv:StringToBoolConverter x:Key="StringToBoolConverter"/>
             <conv:StringToDecimalConverter x:Key="StringToDecimalConverter"/>
+            <services:CommandService x:Key="DataRepositoy"/>
         </ResourceDictionary>
     </Page.Resources>
     
@@ -83,23 +84,50 @@
             <dxg:GridControl.Columns>
 
                 <dxg:GridColumn IsSmart="True" Header="Номер" FieldName="ID"/>
-                <dxg:GridColumn IsSmart="True" Header="Статус" FieldName="STATUS_ID">
-                    <dxg:GridColumn.EditSettings>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <dxg:GridColumn IsSmart="True" Header="Статус" FieldName="STATUS_ID"/>
+                <!--<dxg:GridColumn.EditSettings>
                         <dxg:LookUpEditSettings ItemsSource="{Binding Path=(services:DataRepository.Statuses)}" 
-                                                AutoComplete="True" 
-                                                ShowSizeGrip="True" 
-                                                ImmediatePopup="True" 
-                                                IncrementalFiltering="True" 
-                                                AutoPopulateColumns="False" 
-                                                IsPopupAutoWidth="False" 
-                                                DisplayMember="Name"
-                                                ValueMember="Id">
-                            <dxg:LookUpEditSettings.StyleSettings>
-                                <dxg:SearchLookUpEditStyleSettings/>
-                            </dxg:LookUpEditSettings.StyleSettings>
-                        </dxg:LookUpEditSettings>
-                    </dxg:GridColumn.EditSettings>
-                </dxg:GridColumn>
+                                                DisplayMember="NAME"
+                                                ValueMember="ID"
+                                                IsTextEditable="True"  
+                                                IsSynchronizedWithCurrentItem="True"  
+                                                AutoPopulateColumns="False">
+                        <dxg:LookUpEditSettings.StyleSettings>
+                            <dxg:SearchLookUpEditStyleSettings/>
+                        </dxg:LookUpEditSettings.StyleSettings>
+                    </dxg:LookUpEditSettings>
+                </dxg:GridColumn.EditSettings>
+                </dxg:GridColumn>-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                 <dxg:GridColumn IsSmart="True"  FieldName="CLEARANCE_MOUNTH"  Header="Месяц оформления" BestFitMode="Default" UnboundType="DateTime"/>
                 <!--<dxg:GridColumn.EditSettings>

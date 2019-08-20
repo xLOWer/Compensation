@@ -37,6 +37,7 @@
             <dxb:MainMenuControl Caption="Main Menu">
 
                 <dxb:BarButtonItem x:Name="Documents" Content="Документы" Command="{Binding DocumentsOpenCommand}"/>
+                <dxb:BarButtonItem x:Name="Statuses" Content="Статусы" Command="{Binding StatusesOpenCommand}"/>
 
             </dxb:MainMenuControl>
         </dxb:BarContainerControl>

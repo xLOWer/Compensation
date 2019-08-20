@@ -10,9 +10,9 @@ using System.Text;
 
 namespace comp_app.MVVM.ViewModel
 {
-    public class DocumentSingleViewModel : SingleViewModel<Document, DocumentSingleView, DocumentListView>
+    public class StatusSingleViewModel : SingleViewModel<Status, StatusSingleView, StatusListView>
     {
-        public DocumentSingleViewModel(Document _item, ref DocumentSingleView _view) : base(_item, ref _view)
+        public StatusSingleViewModel(Status _item, ref StatusSingleView _view) : base(_item, ref _view)
         {
         }
     }

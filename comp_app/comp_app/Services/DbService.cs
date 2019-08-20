@@ -81,11 +81,12 @@ namespace comp_app.Services
             foreach (var prop in f)
             {
                 names += (i > 0 ? ", " : "") + prop.Name;
-                values += (i++ > 0 ? ", " : "") + JsonConvert.SerializeObject(prop.GetValue(obj, null));
+                values += (i++ > 0 ? ", " : "") + OracleConvert.UpdateOrInsertTypeHandler(obj, prop);
             }
             var sql = $"insert into {entityOraAttr.SchemeName}.{entityOraAttr.TableName}({names})values({values.Replace("\"", "'")})";
             ExecuteQuery(sql);
         }
+
 
         public static void UpdateEntity<TEntity>(TEntity obj) where TEntity : IRef
         {
@@ -98,7 +99,7 @@ namespace comp_app.Services
                 updates += (i++ > 0 ? ", " : "") + prop.Name + "=" +JsonConvert.SerializeObject(prop.GetValue(obj, null));
             }
             var sql = $"update {entityOraAttr.SchemeName}.{entityOraAttr.TableName} SET {updates.Replace("\"", "'")} WHERE ID={obj.ID}";
-            ExecuteQuery(sql);
+            //ExecuteQuery(sql);
         }
 
         public static void DeleteEntity<TEntity>(string id) where TEntity : IRef
@@ -123,13 +124,15 @@ namespace comp_app.Services
                 for (int i = 0; i < count; i++)
                 {
                     var p = p0.FirstOrDefault(x => x.Name.ToUpper() == reader.GetName(i).ToUpper());
-                    p.SetValue(ins, Convert.ChangeType(Convert.ChangeType(reader.GetValue(i), p.PropertyType), p.PropertyType), null);
+                    var FieldType = reader.GetFieldType(i);
+                    var val = OracleConvert.SelectTypeHandler(reader.GetValue(i), p.PropertyType, FieldType);
+                    p.SetValue(ins, val, null);
                 }
                 list.Add(ins);
             }
             return list;
         }
-               
+        
 
         internal static string SelectSingleValue(string Sql)
         {
@@ -169,6 +172,8 @@ namespace comp_app.Services
 
             internal static string ToOracleVarcharDateString(DateTime Date) => $" TO_DATE('{Date.Day}/{Date.Month}/{Date.Year}','DD/MM/YYYY') ";
 
+            internal static string ToOracleVarcharDateTimeString(DateTime Date) => $" TO_DATE('{ToOracleDateTimeString(Date)}','DD.MM.YYYY HH24:mi:ss') ";
+
             internal static string ToOracleFieldDatesBetweenString(string shortTableName, string fieldName, string sign, DateTime date1, DateTime date2)
                 => $"{shortTableName}.{fieldName} {ToOracleDatesBetweenString(date1, date2)}\n";
 
@@ -205,6 +210,51 @@ namespace comp_app.Services
                 }
                 catch (Exception ex) { }
                 return ret;
+            }
+
+            internal static string UpdateOrInsertTypeHandler<TEntity>(TEntity obj, PropertyInfo prop)
+            {
+                string ret = null;
+
+                object propVal = prop.GetValue(obj, null);
+
+                switch (Type.GetTypeCode(prop.PropertyType))
+                {
+                    case TypeCode.Int64:
+                        ret = $"{propVal.ToString()}";
+                        break;
+                    case TypeCode.String:
+                        ret = $"\"{propVal.ToString()}\"";
+                        break;
+                    case TypeCode.DateTime:
+                        ret = ToOracleVarcharDateTimeString((DateTime)propVal);
+                        break;
+                    case TypeCode.Boolean:
+                        ret = $"\"{((new string[] { "TRUE", "1", "T", "Y", "YES" }).Any(x => x == propVal.ToString().ToUpper()) ? "1" : "0")}\"";
+                        break;
+                    default:
+                        ret = $"\"{propVal.ToString()}\""; break;
+                }
+
+
+                return ret;
+            }
+
+            internal static object SelectTypeHandler(object obj, Type PropType, Type type)
+            {
+                switch (Type.GetTypeCode(PropType))
+                {
+                    case TypeCode.DateTime:
+                        break;
+                    case TypeCode.Boolean:
+                        var tempStr = Convert.ChangeType(obj, typeof(string)).ToString().ToUpper();
+                        return (new string[] { "TRUE", "1", "T", "Y", "YES" }).Any(x => x == tempStr);
+                    default:
+                        return Convert.ChangeType(obj, PropType);
+                }
+
+
+                return obj;
             }
         }
 
@@ -244,7 +294,25 @@ namespace comp_app.Services
 
         }
 
+        public class OracleTableAttribute : Attribute
+        {
+            public OracleTableAttribute(string _SchemeName = null, string _TableName = null)
+            {
+                this.SchemeName = _SchemeName ?? comp_app.AppSettings.AppConfig.Schema;
+                this.TableName = _TableName;
+            }
+            public string SchemeName { get; set; }
+            public string TableName { get; set; }
+        }
 
+        public class OracleTypeAttribute : Attribute
+        {
+            public OracleTypeAttribute(Type _Type = null)
+            {
+                this.Type = _Type;
+            }
+            public Type Type { get; set; }
+        }
     }
 
 

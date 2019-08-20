@@ -1,4 +1,4 @@
-﻿<Page x:Class="comp_app.MVVM.View.DocumentSingleWindow"
+﻿<Page x:Class="comp_app.MVVM.View.DocumentSingleView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -10,7 +10,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:comp_app.MVVM.View"
         mc:Ignorable="d"
-        Name="docWindow"
+        Name="docView"
         Title="Документ" Height="450" Width="800"
         xmlns:services="clr-namespace:comp_app.Services"
         xmlns:set="clr-namespace:comp_app.AppSettings"
@@ -21,6 +21,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Templates/TemplateResourses.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <services:CommandService x:Key="DataRepositoy"/>
         </ResourceDictionary>
     </Page.Resources>
     
@@ -72,6 +73,27 @@
             <dxe:CheckEdit EditValue="{Binding Item.HAS_ORIGINAL}"/>
         </lc:LayoutItem>
 
+        <lc:LayoutItem Label="Статус">
+            <dxg:LookUpEdit ItemsSource="{Binding Path=(services:DataRepository.Statuses)}"  
+                            EditValue="{Binding Item.STATUS_ID, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"  
+                            ValueMember="ID" 
+                            DisplayMember="NAME"
+                            AutoPopulateColumns="False">
+                <dxg:LookUpEdit.PopupContentTemplate>
+                    <ControlTemplate TargetType="{x:Type ContentControl}">
+                        <dxg:GridControl x:Name="PART_GridControl" AutoGenerateColumns="None">
+                            
+                            <dxg:GridControl.Columns>
+                                <dxg:GridColumn Header="Id" FieldName="ID"/>
+                                <dxg:GridColumn Header="Название" FieldName="NAME"/>
+                            </dxg:GridControl.Columns>
+
+                        </dxg:GridControl>
+                    </ControlTemplate>
+                </dxg:LookUpEdit.PopupContentTemplate>
+            </dxg:LookUpEdit>
+        </lc:LayoutItem>
+        
         <lc:LayoutItem Label="Комментарий">
             <dxe:TextEdit Text="{Binding Item.COMMENTS}"/>
         </lc:LayoutItem>

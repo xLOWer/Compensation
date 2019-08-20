@@ -24,9 +24,13 @@ namespace comp_app
     {
         public App()
         {
-            //AppConfigHandler.Load();
-            //AppConfigHandler.ConfigureOracle();            
+            AppConfigHandler.Load();
+            AppConfigHandler.ConfigureOracle();
+
             //DataRepository.LoadAll();
+            //var item = new Document();
+
+            DataRepository.Refresh<Document>();
 
             CultureInfo culture = CultureInfo.CreateSpecificCulture("ru-RU");
             Thread.CurrentThread.CurrentUICulture = culture;

@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace comp_app.MVVM.View
+namespace comp_app
 {
     public partial class AuthWindow : Window
     {

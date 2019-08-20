@@ -15,12 +15,14 @@ namespace comp_app.MVVM.ViewModel.Common
             try
             {
                 View = _view;
-                TabService.NewTab(new DocumentListWindow(), "Документы");
+                TabService.NewTab(new DocumentListView(), "Документы");
             }
             catch (Exception ex) { Utilites.Error(ex); }
         }
+        // StatusesOpenCommand
 
         public CommandService CloseCommand => new CommandService(Close);
+        public CommandService StatusesOpenCommand => new CommandService(StatusesOpen);
 
         public virtual void Close(object o = null)
         {
@@ -28,5 +30,13 @@ namespace comp_app.MVVM.ViewModel.Common
             AuthWindow auth = new AuthWindow();
         }
 
+        public virtual void StatusesOpen(object o = null)
+        {
+            try
+            {
+                TabService.NewTab(new StatusListView(), "Статусы");
+            }
+            catch (Exception ex) { Utilites.Error(ex); }
+        }
     }
 }

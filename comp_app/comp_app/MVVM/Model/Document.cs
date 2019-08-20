@@ -2,6 +2,7 @@
 using comp_app.Services;
 using System;
 using System.Linq;
+using static comp_app.Services.DbService;
 
 namespace comp_app.MVVM.Model
 {
@@ -19,13 +20,6 @@ namespace comp_app.MVVM.Model
 
         public Document()
         {
-            Status = new Status();
-            Provider = new Provider();
-            Company = new Company();
-            Item = new Item();
-            Invoice = new Invoice();
-            PaymentMethod = new PaymentMethod();
-
             ID = 0;
             NAME = "";
             STATUS_ID = 0;
@@ -39,10 +33,12 @@ namespace comp_app.MVVM.Model
             PLAN_SUM = 0;
             INVOICE_ID = 0;
             PAYMENT_METHOD_ID = 0;
-            HAS_ORIGINAL = "0";
-            HAS_SCAN = "0";
-            DOCUMENT_DATE_TIME = DbService.OracleConvert.ToOracleDateTimeString(DateTime.Now);
-            COMPENSATION_DATE = DbService.OracleConvert.ToOracleDateTimeString(DateTime.Now);
+            HAS_ORIGINAL = false;
+            HAS_SCAN = false;
+            DOCUMENT_DATE_TIME = DateTime.Now;
+            COMPENSATION_DATE = DateTime.Now;
+            // DOCUMENT_DATE_TIME = DbService.OracleConvert.ToOracleDateTimeString(DateTime.Now);
+            //COMPENSATION_DATE = DbService.OracleConvert.ToOracleDateTimeString(DateTime.Now);
 
         }
 
@@ -105,7 +101,7 @@ namespace comp_app.MVVM.Model
         ///  № СФ
         /// </summary>
         public long INVOICE_ID { get; set; }
-        
+
         /// <summary>
         /// Способ оплаты
         /// </summary>
@@ -114,64 +110,30 @@ namespace comp_app.MVVM.Model
         /// <summary>
         /// Имеется ли оригинал
         /// </summary>
-        public string HAS_ORIGINAL
-        {
-            get => 
-                new string[] { "1", "TRUE", "YES", "Y", "T" }
-                .Any(x => x == __HAS_ORIGINAL.ToUpper()) 
-                // если в хранимом свойстве лежит нечто похожее на правду
-                ? "1" //возвращаем 1 как строку
-                : "0"; // иначе 0 как строку
-
-            set
-            {
-                __HAS_ORIGINAL = 
-                    new string[] { "1", "TRUE", "YES", "Y", "T" }.Any(x => x == value.ToUpper()) 
-                    ? "1" 
-                    : "0";
-            }
-        }
-        private string __HAS_ORIGINAL;
+        public bool HAS_ORIGINAL { get; set; }
 
         /// <summary>
         /// Имеется ли скан
         /// </summary>
-        public string HAS_SCAN
-        {
-            get => 
-                new string[] { "1", "TRUE", "YES", "Y", "T" }
-                .Any(x => x == __HAS_SCAN.ToUpper())
-                // если в хранимом свойстве лежит нечто похожее на правду
-                ? "1" //возвращаем 1 как строку
-                : "0"; // иначе 0 как строку
-
-            set
-            {
-                __HAS_SCAN = 
-                    new string[] { "1", "TRUE", "YES", "Y", "T" }.Any(x => x == value.ToUpper())
-                    ? "1" 
-                    : "0";
-            }
-        }
-        private string __HAS_SCAN;
+        public bool HAS_SCAN { get; set; }
 
         /// <summary>
         /// Дата документа 
         /// </summary>
-        public string DOCUMENT_DATE_TIME { get; set; }
+        public DateTime DOCUMENT_DATE_TIME { get; set; }
 
         /// <summary>
         /// Дата компенсации
         /// </summary>
-        public string COMPENSATION_DATE { get; set; }
+        public DateTime COMPENSATION_DATE { get; set; }
 
 
         /*   вспомогательные элементы для удобства работы в c#   */
-        internal Status Status { get; set; }
-        internal Provider Provider { get; set; }
-        internal Company Company { get; set; }
+        internal Status Status => DataRepository.Statuses.FirstOrDefault(x => x.ID == STATUS_ID) ?? new Status();
+        internal Provider Provider { get; }
+        internal Company Company { get; }
         internal Item Item { get; set; }
-        internal Invoice Invoice { get; set; }
-        internal PaymentMethod PaymentMethod { get; set; }
+        internal Invoice Invoice { get; }
+        internal PaymentMethod PaymentMethod { get; }
     }
 }

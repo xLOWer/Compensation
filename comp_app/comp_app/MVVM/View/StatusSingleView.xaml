@@ -1,0 +1,61 @@
+﻿<Page x:Class="comp_app.MVVM.View.StatusSingleView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+        xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+        xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+        xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"  
+        xmlns:lc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"  
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:comp_app.MVVM.View"
+        mc:Ignorable="d"
+        Name="statusView"
+        Title="Статус" Height="450" Width="800"
+        xmlns:services="clr-namespace:comp_app.Services"
+        xmlns:set="clr-namespace:comp_app.AppSettings"
+        dx:ThemeManager.ThemeName="{x:Static set:AppConfig.ThemeName}">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Templates/TemplateResourses.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+    
+    <lc:LayoutControl Orientation="Vertical">
+
+        <lc:LayoutGroup Orientation="Horizontal" Height="32">
+            
+            <dx:SimpleButton Template="{StaticResource buttonTamplate}" Glyph="../../Images/save.png" Content="Сохранить">
+                <dxmvvm:Interaction.Behaviors>
+                    <dxmvvm:EventToCommand EventName="Click" Command="{Binding SaveCommand}" PassEventArgsToCommand="False"/>
+                </dxmvvm:Interaction.Behaviors>
+            </dx:SimpleButton>
+
+            <dx:SimpleButton Template="{StaticResource buttonTamplate}" Glyph="../../Images/esc.png" Content="Отменить">
+                <dxmvvm:Interaction.Behaviors>
+                    <dxmvvm:EventToCommand EventName="Click" Command="{Binding CancelCommand}" PassEventArgsToCommand="False"/>
+                </dxmvvm:Interaction.Behaviors>
+            </dx:SimpleButton>
+
+            <dx:SimpleButton Template="{StaticResource buttonTamplate}" Glyph="../../Images/del.png" Content="Удалить">
+                <dxmvvm:Interaction.Behaviors>
+                    <dxmvvm:EventToCommand EventName="Click" Command="{Binding DeleteCommand}" PassEventArgsToCommand="False"/>
+                </dxmvvm:Interaction.Behaviors>
+            </dx:SimpleButton>
+            
+        </lc:LayoutGroup>
+
+        <lc:LayoutItem Label="ID">
+            <dxe:TextEdit Text="{Binding Item.ID}"/>
+        </lc:LayoutItem>
+
+        <lc:LayoutItem Label="Наименование">
+            <dxe:TextEdit Text="{Binding Item.NAME}"/>
+        </lc:LayoutItem>
+
+
+    </lc:LayoutControl>
+</Page>

@@ -7,9 +7,9 @@ using System.Collections.Generic;
 
 namespace comp_app.MVVM.ViewModel
 {
-    public class DocumentListViewModel : ListViewModel<Document, DocumentListView, DocumentSingleView>
+    public class StatusListViewModel : ListViewModel<Status, StatusListView, StatusSingleView>
     {
-        public DocumentListViewModel(ref DocumentListView _view) : base(ref _view)
+        public StatusListViewModel(ref StatusListView _view) : base(ref _view)
         {
             DataRepository.Refresh<Status>();
         }     

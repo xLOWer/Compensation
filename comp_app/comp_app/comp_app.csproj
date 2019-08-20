@@ -188,22 +188,29 @@
     </Compile>
     <Compile Include="MVVM\Model\Common\AppConfig.cs" />
     <Compile Include="MVVM\Model\Common\IRef.cs" />
-    <Compile Include="MVVM\Model\Common\OracleTableAttribute.cs" />
     <Compile Include="MVVM\ViewModel\AuthViewModel.cs" />
     <Compile Include="MVVM\ViewModel\Common\IListViewModel.cs" />
     <Compile Include="MVVM\ViewModel\Common\ISingleViewModel.cs" />
     <Compile Include="MVVM\ViewModel\Common\SingleViewModel.cs" />
     <Compile Include="MVVM\ViewModel\Common\TabViewModel.cs" />
     <Compile Include="MVVM\ViewModel\Common\ViewModelBase.cs" />
+    <Compile Include="MVVM\ViewModel\StatusListViewModel.cs" />
+    <Compile Include="MVVM\ViewModel\StatusSingleViewModel.cs" />
     <Compile Include="MVVM\ViewModel\MainViewModel.cs" />
     <Compile Include="MVVM\ViewModel\Common\ListViewModel.cs" />
     <Compile Include="MVVM\ViewModel\DocumentSingleViewModel.cs" />
     <Compile Include="MVVM\ViewModel\Common\IViewModel.cs" />
-    <Compile Include="MVVM\View\AuthWindow.xaml.cs">
+    <Compile Include="AuthWindow.xaml.cs">
       <DependentUpon>AuthWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MVVM\View\DocumentSingleWindow.xaml.cs">
-      <DependentUpon>DocumentSingleWindow.xaml</DependentUpon>
+    <Compile Include="MVVM\View\StatusListView.xaml.cs">
+      <DependentUpon>StatusListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MVVM\View\StatusSingleView.xaml.cs">
+      <DependentUpon>StatusSingleView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MVVM\View\DocumentSingleView.xaml.cs">
+      <DependentUpon>DocumentSingleView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\Common\CommandService.cs" />
     <Compile Include="Services\Converters\Converters.cs" />
@@ -216,11 +223,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MVVM\View\AuthWindow.xaml">
+    <Page Include="AuthWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MVVM\View\DocumentListWindow.xaml">
+    <Page Include="MVVM\View\StatusListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MVVM\View\DocumentListView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -234,11 +245,15 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MVVM\Model\Status.cs" />
-    <Compile Include="MVVM\View\DocumentListWindow.xaml.cs">
-      <DependentUpon>DocumentListWindow.xaml</DependentUpon>
+    <Compile Include="MVVM\View\DocumentListView.xaml.cs">
+      <DependentUpon>DocumentListView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="MVVM\View\DocumentSingleWindow.xaml">
+    <Page Include="MVVM\View\StatusSingleView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MVVM\View\DocumentSingleView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
