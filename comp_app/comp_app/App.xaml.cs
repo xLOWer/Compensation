@@ -31,6 +31,8 @@ namespace comp_app
             //var item = new Document();
 
             DataRepository.Refresh<Document>();
+            var doc = new Document() { NAME="name123", COMPANY_ID=3 }.WithNewId();
+            DataRepository.Add(doc);
 
             CultureInfo culture = CultureInfo.CreateSpecificCulture("ru-RU");
             Thread.CurrentThread.CurrentUICulture = culture;

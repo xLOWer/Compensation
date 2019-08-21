@@ -16,6 +16,10 @@ namespace comp_app.Services
 {
     internal static partial class DbService
     {
+
+        private const BindingFlags PublicInstance = BindingFlags.Public | BindingFlags.Instance;
+        private static T GetAttrib<T>(Type attrOf) => (T)attrOf.GetCustomAttributes(typeof(T), false).FirstOrDefault();
+
         /// <summary>
         /// Запускает массив команд с возможностью задавать параметры
         /// </summary>
@@ -71,53 +75,93 @@ namespace comp_app.Services
             }
         }
 
-        public static void InsertNewEntity<TEntity>(TEntity obj) where TEntity : IRef
+        public static void InsertNewEntity<T>(T obj) where T : IRef
         {
-            var f = typeof(TEntity).GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            var entityOraAttr = (OracleTableAttribute)typeof(TEntity).GetCustomAttributes(typeof(OracleTableAttribute), false).FirstOrDefault();
+            var tProperties = typeof(T).GetProperties(PublicInstance);
+            var schemeAttr = GetAttrib<DbSchemeAttribute>(typeof(T));
+            var scheme = schemeAttr == null ? "" : $"{schemeAttr.SchemeName}.";
+            var table = GetAttrib<DbTableNameAttribute>(typeof(T))?.TableName ?? typeof(T).Name;
             string values = "";
             string names = "";
             int i = 0;
-            foreach (var prop in f)
+            foreach (var prop in tProperties)
             {
                 names += (i > 0 ? ", " : "") + prop.Name;
-                values += (i++ > 0 ? ", " : "") + OracleConvert.UpdateOrInsertTypeHandler(obj, prop);
+                values += (i++ > 0 ? ", " : "") + OracleConvert.DbOutcomingTypeConterter(obj, prop);
             }
-            var sql = $"insert into {entityOraAttr.SchemeName}.{entityOraAttr.TableName}({names})values({values.Replace("\"", "'")})";
-            ExecuteQuery(sql);
-        }
+            var sql = $"insert into {scheme}{table}({names})values({values.Replace("\"", "'")})";
+            //ExecuteQuery(sql);
+        }               
 
-
-        public static void UpdateEntity<TEntity>(TEntity obj) where TEntity : IRef
+        public static void UpdateEntity<T>(T obj)
         {
-            var f = typeof(TEntity).GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            var entityOraAttr = (OracleTableAttribute)typeof(TEntity).GetCustomAttributes(typeof(OracleTableAttribute), false).FirstOrDefault();
+            var tProperties = typeof(T).GetProperties(PublicInstance);
+            var schemeAttr = GetAttrib<DbSchemeAttribute>(typeof(T));
+            var scheme = schemeAttr == null ? "" : $"{schemeAttr.SchemeName}.";
+            var table = GetAttrib<DbTableNameAttribute>(typeof(T))?.TableName ?? typeof(T).Name;
+            var fieldNameAttr = GetAttrib<DbPrimaryKeyAttribute>(typeof(T));
             string updates = "";
+            var idField = "id";
+            var idFieldValue = "";
             int i = 0;
-            foreach (var prop in f)
+            foreach (var prop in tProperties)
             {
-                updates += (i++ > 0 ? ", " : "") + prop.Name + "=" +JsonConvert.SerializeObject(prop.GetValue(obj, null));
+                var nameAttr = GetAttrib<DbFieldNameAttribute>(prop.PropertyType);
+                var propName = nameAttr == null ? prop.Name : nameAttr.FieldName;
+
+                if (prop.GetCustomAttributes(typeof(DbPrimaryKeyAttribute), false) != null)
+                {
+                    idField = propName;
+                    idFieldValue = prop.GetValue(obj, null).ToString();
+                }
+                else
+                {
+                    updates += (i++ > 0 ? ", " : "") + propName + "=" + OracleConvert.DbOutcomingTypeConterter(obj, prop);
+                }                
             }
-            var sql = $"update {entityOraAttr.SchemeName}.{entityOraAttr.TableName} SET {updates.Replace("\"", "'")} WHERE ID={obj.ID}";
+            
+            var sql = $"update {scheme}{table} SET {updates.Replace("\"", "'")} WHERE {idField}={idFieldValue}";
             //ExecuteQuery(sql);
         }
 
-        public static void DeleteEntity<TEntity>(string id) where TEntity : IRef
+        public static void DeleteEntity<T>(T obj) where T : IRef
         {
-            var f = typeof(TEntity).GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            var entityOraAttr = (OracleTableAttribute)typeof(TEntity).GetCustomAttributes(typeof(OracleTableAttribute), false).FirstOrDefault();
-            var sql = $"delete from {entityOraAttr.SchemeName}.{entityOraAttr.TableName} where ID={id}";
-            ExecuteQuery(sql);
+            var schemeAttr = GetAttrib<DbSchemeAttribute>(typeof(T));
+            var scheme = schemeAttr == null ? "" : $"{schemeAttr.SchemeName}.";
+            var table = GetAttrib<DbTableNameAttribute>(typeof(T))?.TableName ?? typeof(T).Name;
+            var primaryKey = typeof(T).GetProperties(PublicInstance).FirstOrDefault(x => GetAttrib<DbPrimaryKeyAttribute>(x.PropertyType) != null);
+            var idField = primaryKey == null ? "id" : primaryKey.Name;
+            var idFieldValue = primaryKey.GetValue(obj, null).ToString() ?? throw new NullReferenceException("При удалении объекта в базе не указан его идентификатор");
+            var sql = $"delete from {scheme}{table} where {idField}={idFieldValue}";
+            //ExecuteQuery(sql);
+        }
+
+        public static void DeleteEntity<T>(string id) where T : IRef
+        {
+            if(string.IsNullOrEmpty(id)) throw new ArgumentNullException("При удалении объекта в базе не указан его идентификатор или указан пустой");
+            var tableAttr = GetAttrib<DbTableNameAttribute>(typeof(T));
+            var schemeAttr = GetAttrib<DbSchemeAttribute>(typeof(T));
+            var scheme = $"{schemeAttr?.SchemeName}." ?? "";
+            var table = tableAttr?.TableName ?? typeof(T).Name;
+            var primaryKey = typeof(T).GetProperties(PublicInstance).FirstOrDefault(x => GetAttrib<DbPrimaryKeyAttribute>(x.PropertyType) != null);
+            var idField = primaryKey == null ? "id" : primaryKey.Name;
+            var sql = $"delete from {scheme}{table} where {idField}={id}";
+            //ExecuteQuery(sql);
         }
 
         public static List<T> SelectEntity<T>()
         {
             List<T> list = new List<T>();
-            var entityOraAttr = (OracleTableAttribute)typeof(T).GetCustomAttributes(typeof(OracleTableAttribute), false).FirstOrDefault();
+            var tableAttr = GetAttrib<DbTableNameAttribute>(typeof(T));
+            var schemeAttr = GetAttrib<DbSchemeAttribute>(typeof(T));
+            var scheme = schemeAttr == null ? "" : $"{schemeAttr.SchemeName}.";
+            var table = tableAttr?.TableName ?? typeof(T).Name;
+
             Connection.Check();
-            var reader = new OracleCommand($"SELECT * FROM {entityOraAttr.SchemeName}.{entityOraAttr.TableName}", Connection.conn).ExecuteReader();
+            var reader = new OracleCommand($"SELECT * FROM {scheme}{table}", Connection.conn).ExecuteReader();
             int count = reader.FieldCount;
-            var p0 = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var p0 = typeof(T).GetProperties(PublicInstance);
+
             while (reader.Read())
             {
                 var ins = Activator.CreateInstance<T>();
@@ -125,7 +169,7 @@ namespace comp_app.Services
                 {
                     var p = p0.FirstOrDefault(x => x.Name.ToUpper() == reader.GetName(i).ToUpper());
                     var FieldType = reader.GetFieldType(i);
-                    var val = OracleConvert.SelectTypeHandler(reader.GetValue(i), p.PropertyType, FieldType);
+                    var val = OracleConvert.DbIncomingTypeConterter(reader.GetValue(i), p.PropertyType, FieldType);
                     p.SetValue(ins, val, null);
                 }
                 list.Add(ins);
@@ -181,7 +225,7 @@ namespace comp_app.Services
             /// Преобразовывает System.DateTime в строку даты-время Oracle
             /// </summary>
             /// <param name="Date"></param>
-            /// <returns>Возвращает строку в формате DD.MM. YYYY HH24:mi:ss</returns>
+            /// <returns>Возвращает строку в формате DD.MM.YYYY HH24:mi:ss</returns>
             internal static string ToOracleDateTimeString(DateTime Date)
             {
                 var day = Date.Day < 10 ? $"0{Date.Day}" : Date.Day.ToString();
@@ -192,55 +236,50 @@ namespace comp_app.Services
 
             internal static DateTime ToDateTime(string OracleDateString, string format)
             {
-                DateTime ret = DateTime.Now;
                 try
                 {
-                    ret = DateTime.ParseExact(OracleDateString, format, null);
+                    return DateTime.ParseExact(OracleDateString, format, null);
                 }
-                catch (Exception ex) { }
-                return ret;
+                catch (Exception ex)
+                {
+                    return DateTime.Now;
+                }
             }
 
             internal static DateTime ToDateTime(string OracleDateString)
             {
-                DateTime ret = DateTime.Now;
                 try
                 {
-                    ret = DateTime.ParseExact(OracleDateString, "d.M.yyyy H:mm:ss", null);
+                    return DateTime.ParseExact(OracleDateString, "d.M.yyyy H:mm:ss", null);
                 }
-                catch (Exception ex) { }
-                return ret;
+                catch (Exception ex)
+                {
+                    return DateTime.Now;
+                }
             }
 
-            internal static string UpdateOrInsertTypeHandler<TEntity>(TEntity obj, PropertyInfo prop)
+            internal static string DbOutcomingTypeConterter<T>(T obj, PropertyInfo prop)
             {
-                string ret = null;
-
                 object propVal = prop.GetValue(obj, null);
 
                 switch (Type.GetTypeCode(prop.PropertyType))
                 {
-                    case TypeCode.Int64:
-                        ret = $"{propVal.ToString()}";
-                        break;
-                    case TypeCode.String:
-                        ret = $"\"{propVal.ToString()}\"";
-                        break;
+                    case TypeCode.Int64 | TypeCode.Decimal | TypeCode.Int32 | TypeCode.Single | TypeCode.Double | TypeCode.Int16 | TypeCode.UInt64 | TypeCode.UInt32 | TypeCode.UInt16:
+                        return $"{propVal.ToString()}";
+                        
                     case TypeCode.DateTime:
-                        ret = ToOracleVarcharDateTimeString((DateTime)propVal);
-                        break;
+                        return ToOracleVarcharDateTimeString((DateTime)propVal);
+                        
                     case TypeCode.Boolean:
-                        ret = $"\"{((new string[] { "TRUE", "1", "T", "Y", "YES" }).Any(x => x == propVal.ToString().ToUpper()) ? "1" : "0")}\"";
-                        break;
+                        return $"\"{((new string[] { "TRUE", "1", "T", "Y", "YES" }).Any(x => x == propVal.ToString().ToUpper()) ? "1" : "0")}\"";
+                        
                     default:
-                        ret = $"\"{propVal.ToString()}\""; break;
+                        return $"\"{propVal.ToString()}\"";
                 }
-
-
-                return ret;
+                
             }
 
-            internal static object SelectTypeHandler(object obj, Type PropType, Type type)
+            internal static object DbIncomingTypeConterter(object obj, Type PropType, Type type)
             {
                 switch (Type.GetTypeCode(PropType))
                 {
@@ -294,25 +333,35 @@ namespace comp_app.Services
 
         }
 
-        public class OracleTableAttribute : Attribute
+        public class DbTableNameAttribute : Attribute
         {
-            public OracleTableAttribute(string _SchemeName = null, string _TableName = null)
+            public DbTableNameAttribute(string _TableName = null)
             {
-                this.SchemeName = _SchemeName ?? comp_app.AppSettings.AppConfig.Schema;
                 this.TableName = _TableName;
             }
-            public string SchemeName { get; set; }
             public string TableName { get; set; }
         }
 
-        public class OracleTypeAttribute : Attribute
+        public class DbSchemeAttribute : Attribute
         {
-            public OracleTypeAttribute(Type _Type = null)
+            public DbSchemeAttribute(string _SchemeName = null)
             {
-                this.Type = _Type;
+                this.SchemeName = _SchemeName ?? comp_app.AppSettings.AppConfig.Schema;
             }
-            public Type Type { get; set; }
+            public string SchemeName { get; set; }
         }
+
+        public class DbFieldNameAttribute : Attribute
+        {
+            public DbFieldNameAttribute(string _fieldName = null)
+            {
+                this.FieldName = _fieldName;
+            }
+            public string FieldName { get; set; }
+        }
+
+        public class DbPrimaryKeyAttribute : Attribute { }
+
     }
 
 

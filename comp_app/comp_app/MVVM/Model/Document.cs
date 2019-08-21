@@ -9,7 +9,7 @@ namespace comp_app.MVVM.Model
     /// <summary>
     /// Документ
     /// </summary>
-    [OracleTable(TableName = "COMP_DOCUMENT")]
+    [DbTableName("COMP_DOCUMENT")]
     public class Document : IRef
     {
         public Document WithNewId()
@@ -38,13 +38,14 @@ namespace comp_app.MVVM.Model
             DOCUMENT_DATE_TIME = DateTime.Now;
             COMPENSATION_DATE = DateTime.Now;
             // DOCUMENT_DATE_TIME = DbService.OracleConvert.ToOracleDateTimeString(DateTime.Now);
-            //COMPENSATION_DATE = DbService.OracleConvert.ToOracleDateTimeString(DateTime.Now);
+            // COMPENSATION_DATE = DbService.OracleConvert.ToOracleDateTimeString(DateTime.Now);
 
         }
 
         /// <summary>
         /// Идентификатор
         /// </summary>
+        [DbPrimaryKey]
         public long ID { get; set; }
 
         /// <summary>
