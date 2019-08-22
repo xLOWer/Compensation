@@ -16,7 +16,6 @@ namespace comp_app.Services
 {
     internal static partial class DbService
     {
-
         private const BindingFlags PublicInstance = BindingFlags.Public | BindingFlags.Instance;
         private static T GetAttrib<T>(Type attrOf) => (T)attrOf.GetCustomAttributes(typeof(T), false).FirstOrDefault();
 
