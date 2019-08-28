@@ -98,6 +98,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\DevExpress 18.1\Components\Bin\Framework\DevExpress.Data.v18.1.dll</HintPath>
     </Reference>
+    <Reference Include="DevExpress.Images.v18.1, Version=18.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <Private>True</Private>
+    </Reference>
     <Reference Include="DevExpress.Xpf.Controls.v18.1, Version=18.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\DevExpress 18.1\Components\Bin\Framework\DevExpress.Xpf.Controls.v18.1.dll</HintPath>
@@ -125,6 +128,10 @@
     <Reference Include="DevExpress.Xpf.LayoutControl.v18.1, Version=18.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\DevExpress 18.1\Components\Bin\Framework\DevExpress.Xpf.LayoutControl.v18.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Xpf.Ribbon.v18.1, Version=18.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\DevExpress 18.1\Components\Bin\Framework\DevExpress.Xpf.Ribbon.v18.1.dll</HintPath>
     </Reference>
     <Reference Include="DevExpress.Xpf.Themes.VS2017Light.v18.1, Version=18.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -194,6 +201,12 @@
     <Compile Include="MVVM\ViewModel\Common\SingleViewModel.cs" />
     <Compile Include="MVVM\ViewModel\Common\TabViewModel.cs" />
     <Compile Include="MVVM\ViewModel\Common\ViewModelBase.cs" />
+    <Compile Include="MVVM\ViewModel\PaymentMethodListViewModel.cs" />
+    <Compile Include="MVVM\ViewModel\ProviderListViewModel.cs" />
+    <Compile Include="MVVM\ViewModel\ItemListViewModel.cs" />
+    <Compile Include="MVVM\ViewModel\PaymentMethodSingleViewModel.cs" />
+    <Compile Include="MVVM\ViewModel\ProviderSingleViewModel.cs" />
+    <Compile Include="MVVM\ViewModel\ItemSingleViewModel.cs" />
     <Compile Include="MVVM\ViewModel\StatusListViewModel.cs" />
     <Compile Include="MVVM\ViewModel\StatusSingleViewModel.cs" />
     <Compile Include="MVVM\ViewModel\MainViewModel.cs" />
@@ -203,8 +216,26 @@
     <Compile Include="AuthWindow.xaml.cs">
       <DependentUpon>AuthWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MVVM\View\ItemListView.xaml.cs">
+      <DependentUpon>ItemListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MVVM\View\ProviderListView.xaml.cs">
+      <DependentUpon>ProviderListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MVVM\View\ItemSingleView.xaml.cs">
+      <DependentUpon>ItemSingleView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MVVM\View\PaymentMethodListView.xaml.cs">
+      <DependentUpon>PaymentMethodListView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MVVM\View\StatusListView.xaml.cs">
       <DependentUpon>StatusListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MVVM\View\ProviderSingleView.xaml.cs">
+      <DependentUpon>ProviderSingleView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MVVM\View\PaymentMethodSingleView.xaml.cs">
+      <DependentUpon>PaymentMethodSingleView.xaml</DependentUpon>
     </Compile>
     <Compile Include="MVVM\View\StatusSingleView.xaml.cs">
       <DependentUpon>StatusSingleView.xaml</DependentUpon>
@@ -226,6 +257,22 @@
     <Page Include="AuthWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MVVM\View\ItemListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MVVM\View\ProviderListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MVVM\View\ItemSingleView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MVVM\View\PaymentMethodListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="MVVM\View\StatusListView.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -249,6 +296,14 @@
       <DependentUpon>DocumentListView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="MVVM\View\ProviderSingleView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MVVM\View\PaymentMethodSingleView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="MVVM\View\StatusSingleView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -89,8 +89,8 @@ namespace comp_app.Services
                 values += (i++ > 0 ? ", " : "") + OracleConvert.DbOutcomingTypeConterter(obj, prop);
             }
             var sql = $"insert into {scheme}{table}({names})values({values.Replace("\"", "'")})";
-            //ExecuteQuery(sql);
-        }               
+            ExecuteQuery(sql);
+        }
 
         public static void UpdateEntity<T>(T obj)
         {
@@ -107,8 +107,9 @@ namespace comp_app.Services
             {
                 var nameAttr = GetAttrib<DbFieldNameAttribute>(prop.PropertyType);
                 var propName = nameAttr == null ? prop.Name : nameAttr.FieldName;
+                var primary = prop.GetCustomAttributes(typeof(DbPrimaryKeyAttribute), false).Count();
 
-                if (prop.GetCustomAttributes(typeof(DbPrimaryKeyAttribute), false) != null)
+                if (primary > 0)
                 {
                     idField = propName;
                     idFieldValue = prop.GetValue(obj, null).ToString();
@@ -120,7 +121,7 @@ namespace comp_app.Services
             }
             
             var sql = $"update {scheme}{table} SET {updates.Replace("\"", "'")} WHERE {idField}={idFieldValue}";
-            //ExecuteQuery(sql);
+            ExecuteQuery(sql);
         }
 
         public static void DeleteEntity<T>(T obj) where T : IRef
@@ -128,26 +129,16 @@ namespace comp_app.Services
             var schemeAttr = GetAttrib<DbSchemeAttribute>(typeof(T));
             var scheme = schemeAttr == null ? "" : $"{schemeAttr.SchemeName}.";
             var table = GetAttrib<DbTableNameAttribute>(typeof(T))?.TableName ?? typeof(T).Name;
-            var primaryKey = typeof(T).GetProperties(PublicInstance).FirstOrDefault(x => GetAttrib<DbPrimaryKeyAttribute>(x.PropertyType) != null);
+            var props = typeof(T).GetProperties(PublicInstance);
+            var primaryKey = props.FirstOrDefault(x => GetAttrib<DbPrimaryKeyAttribute>(x.PropertyType) != null)
+                //если атрибут ключа не найден то ищем по именам по похожести на ID
+                ?? props.FirstOrDefault(x=> new string[] { "ID","UID","GUID","ID_OBJECT","OBJECT_ID",}.Any(a => a == x.Name.ToUpper()));
             var idField = primaryKey == null ? "id" : primaryKey.Name;
-            var idFieldValue = primaryKey.GetValue(obj, null).ToString() ?? throw new NullReferenceException("При удалении объекта в базе не указан его идентификатор");
+            var idFieldValue = primaryKey?.GetValue(obj, null)?.ToString() ?? throw new NullReferenceException("При удалении объекта в базе не указан его идентификатор");
             var sql = $"delete from {scheme}{table} where {idField}={idFieldValue}";
-            //ExecuteQuery(sql);
+            ExecuteQuery(sql);
         }
-
-        public static void DeleteEntity<T>(string id) where T : IRef
-        {
-            if(string.IsNullOrEmpty(id)) throw new ArgumentNullException("При удалении объекта в базе не указан его идентификатор или указан пустой");
-            var tableAttr = GetAttrib<DbTableNameAttribute>(typeof(T));
-            var schemeAttr = GetAttrib<DbSchemeAttribute>(typeof(T));
-            var scheme = $"{schemeAttr?.SchemeName}." ?? "";
-            var table = tableAttr?.TableName ?? typeof(T).Name;
-            var primaryKey = typeof(T).GetProperties(PublicInstance).FirstOrDefault(x => GetAttrib<DbPrimaryKeyAttribute>(x.PropertyType) != null);
-            var idField = primaryKey == null ? "id" : primaryKey.Name;
-            var sql = $"delete from {scheme}{table} where {idField}={id}";
-            //ExecuteQuery(sql);
-        }
-
+        
         public static List<T> SelectEntity<T>()
         {
             List<T> list = new List<T>();

@@ -16,14 +16,14 @@ using System.Windows.Shapes;
 namespace comp_app.MVVM.View
 {
     /// <summary>
-    /// Логика взаимодействия для StatusSingleView.xaml
+    /// Логика взаимодействия для PaymentMethodSingleView.xaml
     /// </summary>
-    public partial class StatusSingleView : Page
+    public partial class PaymentMethodSingleView : Page
     {
-        public StatusSingleView(Status _status)
+        public PaymentMethodSingleView(PaymentMethod _PaymentMethod)
         {
             InitializeComponent();
-            this.DataContext = new StatusSingleViewModel(_status, ref Status_SingleView);
+            this.DataContext = new PaymentMethodSingleViewModel(_PaymentMethod, ref PaymentMethod_SingleView);
         }        
     }
 }

@@ -12,6 +12,7 @@ namespace comp_app.MVVM.Model
         /// <summary>
         /// Идентификатор
         /// </summary>
+        [DbPrimaryKey]
         public long ID { get; set; }
         /// <summary>
         /// Наименование

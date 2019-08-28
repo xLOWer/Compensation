@@ -1,5 +1,6 @@
 ﻿using comp_app.MVVM.ViewModel.Common;
 using comp_app.Services;
+using DevExpress.Xpf.Ribbon;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace comp_app
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : DXRibbonWindow
     {
         public MainWindow()
         {

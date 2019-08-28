@@ -27,12 +27,17 @@ namespace comp_app
             AppConfigHandler.Load();
             AppConfigHandler.ConfigureOracle();
 
-            //DataRepository.LoadAll();
+            DataRepository.LoadAll();
             //var item = new Document();
 
-            DataRepository.Refresh<Document>();
-            var doc = new Document() { NAME="name123", COMPANY_ID=3 }.WithNewId();
-            DataRepository.Add(doc);
+            //DataRepository.Refresh<Document>();
+            //var doc = new Document() { NAME="name123", COMPANY_ID=3 }.WithNewId();
+            //DataRepository.Add(doc);
+
+            //var doc = DataRepository.Get<Document>().FirstOrDefault(x=>x.ID == 2);
+            //doc.STATUS_ID = 2;
+            //var doc2 = doc;
+            //DataRepository.Update(doc2);
 
             CultureInfo culture = CultureInfo.CreateSpecificCulture("ru-RU");
             Thread.CurrentThread.CurrentUICulture = culture;

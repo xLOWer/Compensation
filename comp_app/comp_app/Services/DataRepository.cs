@@ -30,11 +30,11 @@ namespace comp_app.Services
 
             Set(DbService.SelectEntity<Document>());
             Set(DbService.SelectEntity<Status>());
-            //Set(DbService.SelectEntity<Company>());
-            //Set(DbService.SelectEntity<Provider>());
-            //Set(DbService.SelectEntity<PaymentMethod>());
-            //Set(DbService.SelectEntity<Item>());
-            //Set(DbService.SelectEntity<Invoice>());
+            Set(DbService.SelectEntity<Company>());
+            Set(DbService.SelectEntity<Provider>());
+            Set(DbService.SelectEntity<PaymentMethod>());
+            Set(DbService.SelectEntity<Item>());
+            Set(DbService.SelectEntity<Invoice>());
         }
 
         public static void Set<T>(List<T> value)
@@ -61,16 +61,15 @@ namespace comp_app.Services
         public static void Refresh<T>()
         {
             Set(DbService.SelectEntity<T>());
-            var prop = GetProp<T>();
         }
 
         public static void Remove<T>(T item) where T : IRef
         {
             if (item == null) return;
-            if (item.ID == null) return;
-            DbService.DeleteEntity<T>(item.ID.ToString());
+            DbService.DeleteEntity(item);
+            Refresh<T>();
         }
-
+        
         public static void Add<T>(T item) where T : IRef
         {
             if (item == null) return;
@@ -82,6 +81,7 @@ namespace comp_app.Services
         {
             if (item == null) return;
             DbService.UpdateEntity<T>(item);
+            Refresh<T>();
         }
 
 

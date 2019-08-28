@@ -16,14 +16,14 @@ using System.Windows.Shapes;
 namespace comp_app.MVVM.View
 {
     /// <summary>
-    /// Логика взаимодействия для StatusSingleView.xaml
+    /// Логика взаимодействия для ProviderSingleView.xaml
     /// </summary>
-    public partial class StatusSingleView : Page
+    public partial class ProviderSingleView : Page
     {
-        public StatusSingleView(Status _status)
+        public ProviderSingleView(Provider _Provider)
         {
             InitializeComponent();
-            this.DataContext = new StatusSingleViewModel(_status, ref Status_SingleView);
+            this.DataContext = new ProviderSingleViewModel(_Provider, ref Provider_SingleView);
         }        
     }
 }

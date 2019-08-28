@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
         xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+        xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
         xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
         xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"  
         xmlns:lc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"  
@@ -24,37 +25,57 @@
             <services:CommandService x:Key="DataRepositoy"/>
         </ResourceDictionary>
     </Page.Resources>
-    
+
     <lc:LayoutControl Orientation="Vertical">
 
-        <lc:LayoutGroup Orientation="Horizontal" Height="32">
-            
-            <dx:SimpleButton Template="{StaticResource buttonTamplate}" Glyph="../../Images/save.png" Content="Сохранить">
-                <dxmvvm:Interaction.Behaviors>
-                    <dxmvvm:EventToCommand EventName="Click" Command="{Binding SaveCommand}" PassEventArgsToCommand="False"/>
-                </dxmvvm:Interaction.Behaviors>
-            </dx:SimpleButton>
-
-            <dx:SimpleButton Template="{StaticResource buttonTamplate}" Glyph="../../Images/esc.png" Content="Отменить">
-                <dxmvvm:Interaction.Behaviors>
-                    <dxmvvm:EventToCommand EventName="Click" Command="{Binding CancelCommand}" PassEventArgsToCommand="False"/>
-                </dxmvvm:Interaction.Behaviors>
-            </dx:SimpleButton>
-
-            <dx:SimpleButton Template="{StaticResource buttonTamplate}" Glyph="../../Images/del.png" Content="Удалить">
-                <dxmvvm:Interaction.Behaviors>
-                    <dxmvvm:EventToCommand EventName="Click" Command="{Binding DeleteCommand}" PassEventArgsToCommand="False"/>
-                </dxmvvm:Interaction.Behaviors>
-            </dx:SimpleButton>
-            
+        <lc:LayoutGroup Height="Auto"  Margin="-12 -12 -12 0">
+            <dxb:ToolBarControl Grid.Row="0" GlyphSize="Large">
+                <dxb:BarButtonItem ToolTip="Сохранить" Glyph="{dx:DXImageOffice2013 Image=Save_32x32.png}" Command="{Binding SaveCommand}"/>
+                <dxb:BarButtonItem ToolTip="Отменить" Glyph="pack://application:,,,/CompensationApp;component/Images/esc.png" Command="{Binding CancelCommand}"/>
+                <dxb:BarButtonItem ToolTip="Удалить" Glyph="{dx:DXImageOffice2013 Image=Delete_32x32.png}" Command="{Binding DeleteCommand}"/>
+            </dxb:ToolBarControl>
         </lc:LayoutGroup>
 
         <lc:LayoutItem Label="Поставщик">
-            <dxe:TextEdit Text="{Binding Item.PROVIDER_ID}"/>
+            <dxg:LookUpEdit ItemsSource="{Binding Path=(services:DataRepository.Providers)}"  
+                            EditValue="{Binding Item.PROVIDER_ID, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"  
+                            ValueMember="ID" 
+                            DisplayMember="NAME"
+                            AutoPopulateColumns="False">
+                <dxg:LookUpEdit.PopupContentTemplate>
+                    <ControlTemplate TargetType="{x:Type ContentControl}">
+                        <dxg:GridControl x:Name="PART_GridControl" AutoGenerateColumns="None">
+
+                            <dxg:GridControl.Columns>
+                                <dxg:GridColumn Header="Id" FieldName="ID"/>
+                                <dxg:GridColumn Header="Название" FieldName="NAME"/>
+                            </dxg:GridControl.Columns>
+
+                        </dxg:GridControl>
+                    </ControlTemplate>
+                </dxg:LookUpEdit.PopupContentTemplate>
+            </dxg:LookUpEdit>
         </lc:LayoutItem>
 
         <lc:LayoutItem Label="Компания">
-            <dxe:TextEdit Text="{Binding Item.COMPANY_ID}"/>
+            <dxg:LookUpEdit ItemsSource="{Binding Path=(services:DataRepository.Companies)}"  
+                            EditValue="{Binding Item.COMPANY_ID, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"  
+                            ValueMember="ID" 
+                            DisplayMember="NAME"
+                            AutoPopulateColumns="False">
+                <dxg:LookUpEdit.PopupContentTemplate>
+                    <ControlTemplate TargetType="{x:Type ContentControl}">
+                        <dxg:GridControl x:Name="PART_GridControl" AutoGenerateColumns="None">
+
+                            <dxg:GridControl.Columns>
+                                <dxg:GridColumn Header="Id" FieldName="ID"/>
+                                <dxg:GridColumn Header="Название" FieldName="NAME"/>
+                            </dxg:GridControl.Columns>
+
+                        </dxg:GridControl>
+                    </ControlTemplate>
+                </dxg:LookUpEdit.PopupContentTemplate>
+            </dxg:LookUpEdit>
         </lc:LayoutItem>
 
         <lc:LayoutItem Label="Месяц начисления">
@@ -73,6 +94,27 @@
             <dxe:CheckEdit EditValue="{Binding Item.HAS_ORIGINAL}"/>
         </lc:LayoutItem>
 
+        <lc:LayoutItem Label="Способ оплаты">
+            <dxg:LookUpEdit ItemsSource="{Binding Path=(services:DataRepository.PaymentMethods)}"  
+                            EditValue="{Binding Item.PAYMENT_METHOD_ID, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"  
+                            ValueMember="ID" 
+                            DisplayMember="NAME"
+                            AutoPopulateColumns="False">
+                <dxg:LookUpEdit.PopupContentTemplate>
+                    <ControlTemplate TargetType="{x:Type ContentControl}">
+                        <dxg:GridControl x:Name="PART_GridControl" AutoGenerateColumns="None">
+
+                            <dxg:GridControl.Columns>
+                                <dxg:GridColumn Header="Id" FieldName="ID"/>
+                                <dxg:GridColumn Header="Название" FieldName="NAME"/>
+                            </dxg:GridControl.Columns>
+
+                        </dxg:GridControl>
+                    </ControlTemplate>
+                </dxg:LookUpEdit.PopupContentTemplate>
+            </dxg:LookUpEdit>
+        </lc:LayoutItem>
+        
         <lc:LayoutItem Label="Статус">
             <dxg:LookUpEdit ItemsSource="{Binding Path=(services:DataRepository.Statuses)}"  
                             EditValue="{Binding Item.STATUS_ID, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"  
@@ -99,7 +141,24 @@
         </lc:LayoutItem>
 
         <lc:LayoutItem Label="Приложенная СФ">
-            <dxe:TextEdit Text="{Binding Item.INVOICE_ID}"/>
+            <dxg:LookUpEdit ItemsSource="{Binding Path=(services:DataRepository.Invoices)}"  
+                            EditValue="{Binding Item.INVOICE_ID, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"  
+                            ValueMember="ID" 
+                            DisplayMember="NAME"
+                            AutoPopulateColumns="False">
+                <dxg:LookUpEdit.PopupContentTemplate>
+                    <ControlTemplate TargetType="{x:Type ContentControl}">
+                        <dxg:GridControl x:Name="PART_GridControl" AutoGenerateColumns="None">
+
+                            <dxg:GridControl.Columns>
+                                <dxg:GridColumn Header="Id" FieldName="ID"/>
+                                <dxg:GridColumn Header="Название" FieldName="NAME"/>
+                            </dxg:GridControl.Columns>
+
+                        </dxg:GridControl>
+                    </ControlTemplate>
+                </dxg:LookUpEdit.PopupContentTemplate>
+            </dxg:LookUpEdit>
         </lc:LayoutItem>
 
         <lc:LayoutItem Label="Файл">

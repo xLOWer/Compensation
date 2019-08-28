@@ -12,34 +12,19 @@ namespace comp_app.MVVM.Model
     [DbTableName("COMP_DOCUMENT")]
     public class Document : IRef
     {
-        public Document WithNewId()
-        {
-            ID = DataRepository.Get<Document>().Max(x => x.ID) + 1;
-            return this;
-        }
-
         public Document()
         {
-            ID = 0;
+            ID =( DataRepository.Get<Document>()?.Max(x => x?.ID) + 1) ?? 0;
             NAME = "";
-            STATUS_ID = 0;
             CLEARANCE_MOUNTH = 0;
             ACCURUAL_MOUNTH = 0;
-            PROVIDER_ID = 0;
-            COMPANY_ID = 0;
-            ITEM_ID = 0;
             COMMENTS = "";
             FACT_SUM = 0;
             PLAN_SUM = 0;
-            INVOICE_ID = 0;
-            PAYMENT_METHOD_ID = 0;
             HAS_ORIGINAL = false;
             HAS_SCAN = false;
             DOCUMENT_DATE_TIME = DateTime.Now;
             COMPENSATION_DATE = DateTime.Now;
-            // DOCUMENT_DATE_TIME = DbService.OracleConvert.ToOracleDateTimeString(DateTime.Now);
-            // COMPENSATION_DATE = DbService.OracleConvert.ToOracleDateTimeString(DateTime.Now);
-
         }
 
         /// <summary>

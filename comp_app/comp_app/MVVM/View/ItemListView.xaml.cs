@@ -10,12 +10,12 @@ namespace comp_app.MVVM.View
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
-    public partial class StatusListView : Page
+    public partial class ItemListView : Page
     {
-        public StatusListView()
+        public ItemListView()
         {
             InitializeComponent();
-            this.DataContext = new StatusListViewModel(ref Status_ListView);
+            this.DataContext = new ItemListViewModel(ref Item_ListView);
         }
     }
 }

@@ -1,17 +1,17 @@
-﻿<Page x:Class="comp_app.MVVM.View.StatusSingleView"
+﻿<Page x:Class="comp_app.MVVM.View.ProviderSingleView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
         xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
-        xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
         xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+        xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
         xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"  
         xmlns:lc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"  
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:comp_app.MVVM.View"
         mc:Ignorable="d"
-        Name="Status_SingleView"
+        Name="Provider_SingleView"
         Title="Статус" Height="450" Width="800"
         xmlns:services="clr-namespace:comp_app.Services"
         xmlns:set="clr-namespace:comp_app.AppSettings"
@@ -34,6 +34,7 @@
                 <dxb:BarButtonItem ToolTip="Удалить" Glyph="{dx:DXImageOffice2013 Image=Delete_32x32.png}" Command="{Binding DeleteCommand}"/>
             </dxb:ToolBarControl>
         </lc:LayoutGroup>
+
         <lc:LayoutItem Label="ID">
             <dxe:TextEdit Text="{Binding Item.ID}"/>
         </lc:LayoutItem>

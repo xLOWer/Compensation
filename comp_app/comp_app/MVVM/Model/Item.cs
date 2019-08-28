@@ -1,15 +1,18 @@
 ﻿using comp_app.MVVM.Model.Common;
+using static comp_app.Services.DbService;
 
 namespace comp_app.MVVM.Model
 {
     /// <summary>
     /// Статья бюджета
     /// </summary>
+    [DbTableName("COMP_ITEM")]
     public class Item : IRef
     {
         /// <summary>
         /// Идентификатор
         /// </summary>
+        [DbPrimaryKey]
         public long ID { get; set; }
         /// <summary>
         /// Наименование

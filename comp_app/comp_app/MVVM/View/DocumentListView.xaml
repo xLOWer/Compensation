@@ -6,6 +6,7 @@
         xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
         xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
         xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+        xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
         xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"  
         xmlns:local="clr-namespace:comp_app.MVVM.View"
         xmlns:model="clr-namespace:comp_app.MVVM.Model"
@@ -32,37 +33,16 @@
     
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="32"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" Orientation="Horizontal">
-            
-            <dx:SimpleButton Template="{StaticResource buttonTamplate}" Glyph="../../Images/refresh.png" Content="Обновить">
-                <dxmvvm:Interaction.Behaviors>
-                    <dxmvvm:EventToCommand EventName="Click" Command="{Binding RefreshCommand}" PassEventArgsToCommand="False"/>
-                </dxmvvm:Interaction.Behaviors>
-            </dx:SimpleButton>
-            
-            <dx:SimpleButton Template="{StaticResource buttonTamplate}" Glyph="../../Images/add.png" Content="Добавить">
-                <dxmvvm:Interaction.Behaviors>
-                    <dxmvvm:EventToCommand EventName="Click" Command="{Binding AddNewCommand}" PassEventArgsToCommand="False"/>
-                </dxmvvm:Interaction.Behaviors>
-            </dx:SimpleButton>
-
-            <dx:SimpleButton Template="{StaticResource buttonTamplate}" Glyph="../../Images/del.png" Content="Удалить">
-                <dxmvvm:Interaction.Behaviors>
-                    <dxmvvm:EventToCommand EventName="Click" Command="{Binding DeleteCommand}" PassEventArgsToCommand="False"/>
-                </dxmvvm:Interaction.Behaviors>
-            </dx:SimpleButton>
-
-            <dx:SimpleButton Template="{StaticResource buttonTamplate}" Glyph="../../Images/edit.png" Content="Редакировать">
-                <dxmvvm:Interaction.Behaviors>
-                    <dxmvvm:EventToCommand EventName="Click" Command="{Binding EditCommand}" PassEventArgsToCommand="False"/>
-                </dxmvvm:Interaction.Behaviors>
-            </dx:SimpleButton>
-            
-        </StackPanel>
+        <dxb:ToolBarControl Grid.Row="0" GlyphSize="Large">
+            <dxb:BarButtonItem ToolTip="Обновить" Glyph="{dx:DXImageOffice2013 Image=Refresh_32x32.png}" Command="{Binding RefreshCommand}"/>
+            <dxb:BarButtonItem ToolTip="Добавить" Glyph="{dx:DXImageOffice2013 Image=Add_32x32.png}" Command="{Binding AddNewCommand}"/>
+            <dxb:BarButtonItem ToolTip="Удалить" Glyph="{dx:DXImageOffice2013 Image=Delete_32x32.png}" Command="{Binding DeleteCommand}"/>
+            <dxb:BarButtonItem ToolTip="Редакировать" Glyph="{dx:DXImageOffice2013 Image=Edit_32x32.png}" Command="{Binding EditCommand}"/>
+        </dxb:ToolBarControl>
 
         <dxg:GridControl Grid.Row="1" 
                          Name="grid" 
@@ -86,266 +66,137 @@
                 <dxg:GridColumn IsSmart="True" Header="Номер" FieldName="ID"/>
 
 
-
-
-
-
-
-
-
-
-
-
-
-                <dxg:GridColumn IsSmart="True" Header="Статус" FieldName="STATUS_ID"/>
-                <!--<dxg:GridColumn.EditSettings>
-                        <dxg:LookUpEditSettings ItemsSource="{Binding Path=(services:DataRepository.Statuses)}" 
-                                                DisplayMember="NAME"
-                                                ValueMember="ID"
-                                                IsTextEditable="True"  
-                                                IsSynchronizedWithCurrentItem="True"  
-                                                AutoPopulateColumns="False">
-                        <dxg:LookUpEditSettings.StyleSettings>
-                            <dxg:SearchLookUpEditStyleSettings/>
-                        </dxg:LookUpEditSettings.StyleSettings>
-                    </dxg:LookUpEditSettings>
-                </dxg:GridColumn.EditSettings>
-                </dxg:GridColumn>-->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                <dxg:GridColumn Header="Статус" FieldName="STATUS_ID">
+                    <dxg:GridColumn.CellTemplate>
+                        <DataTemplate>
+                            <dxe:ComboBoxEdit Name="PART_Editor"  
+                                        ItemsSource="{Binding Path=(services:DataRepository.Statuses)}"  
+                                DisplayMember="NAME"  
+                                ValueMember="ID"  
+                                EditValue="{Binding Data.STATUS_ID}" >
+                                <dxe:ComboBoxEdit.StyleSettings>
+                                    <dxe:CheckedComboBoxStyleSettings/>
+                                </dxe:ComboBoxEdit.StyleSettings>
+                            </dxe:ComboBoxEdit>
+                        </DataTemplate>
+                    </dxg:GridColumn.CellTemplate>
+                </dxg:GridColumn>
 
 
 
                 <dxg:GridColumn IsSmart="True"  FieldName="CLEARANCE_MOUNTH"  Header="Месяц оформления" BestFitMode="Default" UnboundType="DateTime"/>
-                <!--<dxg:GridColumn.EditSettings>
-                        <dxe:DateEditSettings  AllowNullInput="True" NullText="N/A">
-                            <dxe:DateEditSettings.StyleSettings>
-                                <dxe:DateEditPickerStyleSettings/>
-                            </dxe:DateEditSettings.StyleSettings>
-                        </dxe:DateEditSettings>
-                    </dxg:GridColumn.EditSettings>
-                </dxg:GridColumn>-->
-
                 <dxg:GridColumn IsSmart="True" FieldName="ACCURUAL_MOUNTH" Header="Месяц начислений" BestFitMode="Default" UnboundType="DateTime"/>
-                <!--<dxg:GridColumn.EditSettings>
-                        <dxe:DateEditSettings AllowNullInput="True" NullText="N/A">
-                            <dxe:DateEditSettings.StyleSettings>
-                                <dxe:DateEditPickerStyleSettings/>
-                            </dxe:DateEditSettings.StyleSettings>
-                        </dxe:DateEditSettings>
-                    </dxg:GridColumn.EditSettings>
-                </dxg:GridColumn>-->
-
                 <dxg:GridColumn IsSmart="True" Header="Дата документа" FieldName="COMPENSATION_DATE" BestFitMode="Default" UnboundType="DateTime"/>
-                <!--<dxg:GridColumn.EditSettings>
-                        <dxe:DateEditSettings  AllowNullInput="True" NullText="N/A"/>
-                    </dxg:GridColumn.EditSettings>
-                </dxg:GridColumn>-->
-
+                
                 <dxg:GridColumn IsSmart="True" Header="Дата компенсации" FieldName="DOCUMENT_DATE_TIME" BestFitMode="Default" UnboundType="DateTime">
                 <dxg:GridColumn.EditSettings>
                         <dxe:DateEditSettings AllowNullInput="True" NullText="N/A"/>
                     </dxg:GridColumn.EditSettings>
                 </dxg:GridColumn>
 
-                <dxg:GridColumn IsSmart="True" FieldName="PROVIDER_ID" Header="Поставщик" EditFormCaption="Поставщик"/>
-                <!--<dxg:GridColumn.EditSettings>
-                        <dxg:LookUpEditSettings ItemsSource="{Binding Path=(services:DataRepository.Providers)}" 
-                                                AutoComplete="True" 
-                                                ShowSizeGrip="True" 
-                                                ImmediatePopup="True" 
-                                                IncrementalFiltering="True" 
-                                                AutoPopulateColumns="False" 
-                                                IsPopupAutoWidth="False" 
-                                                DisplayMember="Name"
-                                                ValueMember="Id">
-                            <dxg:LookUpEditSettings.PopupContentTemplate>
-                                <ControlTemplate>
-                                    <dxg:GridControl Name="PART_GridControl">
-                                        <dxg:GridControl.Columns>
-                                            <dxg:GridColumn IsSmart="True" FieldName="Id" Header="Идентификатор"/>
-                                            <dxg:GridColumn IsSmart="True" FieldName="Name" Header="наименование"/>
-                                        </dxg:GridControl.Columns>
-                                        <dxg:GridControl.View>
-                                            <dxg:TableView AutoWidth="True" ShowSearchPanelMode="Always"/>
-                                        </dxg:GridControl.View>
-                                    </dxg:GridControl>
-                                </ControlTemplate>
-                            </dxg:LookUpEditSettings.PopupContentTemplate>
-                            <dxg:LookUpEditSettings.StyleSettings>
-                                <dxg:SearchLookUpEditStyleSettings/>
-                            </dxg:LookUpEditSettings.StyleSettings>
-                        </dxg:LookUpEditSettings>
-                    </dxg:GridColumn.EditSettings>
-                </dxg:GridColumn>-->
+                <dxg:GridColumn IsSmart="True" FieldName="PROVIDER_ID" Header="Поставщик" EditFormCaption="Поставщик">
+                    <dxg:GridColumn.CellTemplate>
+                        <DataTemplate>
+                            <dxe:ComboBoxEdit Name="PART_Editor"  
+                                        ItemsSource="{Binding Path=(services:DataRepository.Providers)}"  
+                                DisplayMember="NAME"  
+                                ValueMember="ID"  
+                                EditValue="{Binding Data.PROVIDER_ID}" >
+                                <dxe:ComboBoxEdit.StyleSettings>
+                                    <dxe:CheckedComboBoxStyleSettings/>
+                                </dxe:ComboBoxEdit.StyleSettings>
+                            </dxe:ComboBoxEdit>
+                        </DataTemplate>
+                    </dxg:GridColumn.CellTemplate>
+                </dxg:GridColumn>
 
-                <dxg:GridColumn IsSmart="True" FieldName="COMPANY_ID" Header="Компания"/>
-                <!--<dxg:GridColumn.EditSettings>
-                        <dxg:LookUpEditSettings ItemsSource="{Binding Path=(services:DataRepository.Companies)}" 
-                                                AutoComplete="True" 
-                                                ShowSizeGrip="True" 
-                                                ImmediatePopup="True" 
-                                                IncrementalFiltering="True" 
-                                                AutoPopulateColumns="False" 
-                                                IsPopupAutoWidth="False" 
-                                                DisplayMember="Name"
-                                                ValueMember="Id">
-                            <dxg:LookUpEditSettings.PopupContentTemplate>
-                                <ControlTemplate>
-                                    <dxg:GridControl Name="PART_GridControl">
-                                        <dxg:GridControl.Columns>
-                                            <dxg:GridColumn IsSmart="True" FieldName="Id" Header="Идентификатор"/>
-                                            <dxg:GridColumn IsSmart="True" FieldName="Name" Header="наименование"/>
-                                        </dxg:GridControl.Columns>
-                                        <dxg:GridControl.View>
-                                            <dxg:TableView AutoWidth="True" ShowSearchPanelMode="Always"/>
-                                        </dxg:GridControl.View>
-                                    </dxg:GridControl>
-                                </ControlTemplate>
-                            </dxg:LookUpEditSettings.PopupContentTemplate>
-                            <dxg:LookUpEditSettings.StyleSettings>
-                                <dxg:SearchLookUpEditStyleSettings/>
-                            </dxg:LookUpEditSettings.StyleSettings>
-                        </dxg:LookUpEditSettings>
-                    </dxg:GridColumn.EditSettings>
-                </dxg:GridColumn>-->
+                <dxg:GridColumn IsSmart="True" FieldName="COMPANY_ID" Header="Компания">
+                    <dxg:GridColumn.CellTemplate>
+                        <DataTemplate>
+                            <dxe:ComboBoxEdit Name="PART_Editor"  
+                                        ItemsSource="{Binding Path=(services:DataRepository.Companies)}"  
+                                DisplayMember="NAME"  
+                                ValueMember="ID"  
+                                EditValue="{Binding Data.COMPANY_ID}" >
+                                <dxe:ComboBoxEdit.StyleSettings>
+                                    <dxe:CheckedComboBoxStyleSettings/>
+                                </dxe:ComboBoxEdit.StyleSettings>
+                            </dxe:ComboBoxEdit>
+                        </DataTemplate>
+                    </dxg:GridColumn.CellTemplate>
+                </dxg:GridColumn>
 
-                <dxg:GridColumn IsSmart="True" FieldName="ITEM_ID" Header="Статья" EditFormCaption="Статья"/>
-                <!--<dxg:GridColumn.EditSettings>
-                        <dxg:LookUpEditSettings ItemsSource="{Binding Path=(services:DataRepository.Items)}" 
-                                                AutoComplete="True" 
-                                                ShowSizeGrip="True" 
-                                                ImmediatePopup="True" 
-                                                IncrementalFiltering="True" 
-                                                AutoPopulateColumns="False" 
-                                                IsPopupAutoWidth="False" 
-                                                DisplayMember="Name"
-                                                ValueMember="Id">
-                            <dxg:LookUpEditSettings.PopupContentTemplate>
-                                <ControlTemplate>
-                                    <dxg:GridControl Name="PART_GridControl">
-                                        <dxg:GridControl.Columns>
-                                            <dxg:GridColumn IsSmart="True" FieldName="Id" Header="Идентификатор"/>
-                                            <dxg:GridColumn IsSmart="True" FieldName="Name" Header="наименование"/>
-                                        </dxg:GridControl.Columns>
-                                        <dxg:GridControl.View>
-                                            <dxg:TableView AutoWidth="True" ShowSearchPanelMode="Always"/>
-                                        </dxg:GridControl.View>
-                                    </dxg:GridControl>
-                                </ControlTemplate>
-                            </dxg:LookUpEditSettings.PopupContentTemplate>
-                            <dxg:LookUpEditSettings.StyleSettings>
-                                <dxg:SearchLookUpEditStyleSettings/>
-                            </dxg:LookUpEditSettings.StyleSettings>
-                        </dxg:LookUpEditSettings>
-                    </dxg:GridColumn.EditSettings>
-                </dxg:GridColumn>-->
+                <dxg:GridColumn IsSmart="True" FieldName="ITEM_ID" Header="Статья" EditFormCaption="Статья">
+                    <dxg:GridColumn.CellTemplate>
+                        <DataTemplate>
+                            <dxe:ComboBoxEdit Name="PART_Editor"  
+                                        ItemsSource="{Binding Path=(services:DataRepository.Items)}"  
+                                DisplayMember="NAME"  
+                                ValueMember="ID"  
+                                EditValue="{Binding Data.ITEM_ID}" >
+                                <dxe:ComboBoxEdit.StyleSettings>
+                                    <dxe:CheckedComboBoxStyleSettings/>
+                                </dxe:ComboBoxEdit.StyleSettings>
+                            </dxe:ComboBoxEdit>
+                        </DataTemplate>
+                    </dxg:GridColumn.CellTemplate>
+                </dxg:GridColumn>
 
                 <dxg:GridColumn IsSmart="True" FieldName="COMMENTS" Header="Примечания"/>
 
-                <dxg:GridColumn IsSmart="True" Header="Факт" FieldName="FACT_SUM" UnboundType="Decimal" />
-                <!--<dxg:GridColumn.EditSettings>
-                    <dxe:TextEditSettings MaskType="Numeric" Mask="N2" MaskUseAsDisplayFormat="True"/>
-                </dxg:GridColumn.EditSettings>-->
+                <dxg:GridColumn IsSmart="True" Header="Факт" FieldName="FACT_SUM" UnboundType="Decimal" >
+                    <dxg:GridColumn.EditSettings>
+                        <dxe:TextEditSettings MaskType="Numeric" Mask="N2" MaskUseAsDisplayFormat="True"/>
+                    </dxg:GridColumn.EditSettings>
+                </dxg:GridColumn>
 
 
-                <dxg:GridColumn IsSmart="True" Header="План" FieldName="PLAN_SUM" UnboundType="Decimal"/>
-                <!--<dxg:GridColumn.EditSettings>
+                <dxg:GridColumn IsSmart="True" Header="План" FieldName="PLAN_SUM" UnboundType="Decimal">
+                    <dxg:GridColumn.EditSettings>
                         <dxe:TextEditSettings MaskType="Numeric" Mask="n2" MaskUseAsDisplayFormat="True"/>
                     </dxg:GridColumn.EditSettings>
-                </dxg:GridColumn>-->
+                </dxg:GridColumn>
 
-                <dxg:GridColumn IsSmart="True" FieldName="INVOICE_ID" Header="№ СФ"/>
-                <!--<dxg:GridColumn.EditSettings>
-                        <dxg:LookUpEditSettings ItemsSource="{Binding Path=(services:DataRepository.Invoices)}" 
-                                                AutoComplete="True" 
-                                                ShowSizeGrip="True" 
-                                                ImmediatePopup="True" 
-                                                IncrementalFiltering="True" 
-                                                AutoPopulateColumns="False" 
-                                                IsPopupAutoWidth="False" 
-                                                DisplayMember="Number"
-                                                ValueMember="Id">
-                            <dxg:LookUpEditSettings.PopupContentTemplate>
-                                <ControlTemplate>
-                                    <dxg:GridControl Name="PART_GridControl">
-                                        <dxg:GridControl.Columns>
-                                            <dxg:GridColumn IsSmart="True" FieldName="Id" Header="Идентификатор"/>
-                                            <dxg:GridColumn IsSmart="True" FieldName="Name" Header="наименование"/>
-                                        </dxg:GridControl.Columns>
-                                        <dxg:GridControl.View>
-                                            <dxg:TableView AutoWidth="True" ShowSearchPanelMode="Always"/>
-                                        </dxg:GridControl.View>
-                                    </dxg:GridControl>
-                                </ControlTemplate>
-                            </dxg:LookUpEditSettings.PopupContentTemplate>
-                            <dxg:LookUpEditSettings.StyleSettings>
-                                <dxg:SearchLookUpEditStyleSettings/>
-                            </dxg:LookUpEditSettings.StyleSettings>
-                        </dxg:LookUpEditSettings>
-                    </dxg:GridColumn.EditSettings>
-                </dxg:GridColumn>-->
+                <dxg:GridColumn IsSmart="True" FieldName="INVOICE_ID" Header="№ СФ" >
+                <dxg:GridColumn.CellTemplate>
+                    <DataTemplate>
+                        <dxe:ComboBoxEdit Name="PART_Editor"  
+                                        ItemsSource="{Binding Path=(services:DataRepository.Invoices)}"  
+                                DisplayMember="NAME"  
+                                ValueMember="ID"  
+                                EditValue="{Binding Data.INVOICE_ID}" >
+                            <dxe:ComboBoxEdit.StyleSettings>
+                                <dxe:CheckedComboBoxStyleSettings/>
+                            </dxe:ComboBoxEdit.StyleSettings>
+                        </dxe:ComboBoxEdit>
+                    </DataTemplate>
+                </dxg:GridColumn.CellTemplate>
+                </dxg:GridColumn>
 
-                <dxg:GridColumn IsSmart="True" FieldName="PAYMENT_METHOD_ID" Header="Способ оплаты"/>
-                <!--<dxg:GridColumn.EditSettings>
-                        <dxg:LookUpEditSettings ItemsSource="{Binding Path=(services:DataRepository.PaymentMethods)}" 
-                                                AutoComplete="True" 
-                                                ShowSizeGrip="True" 
-                                                ImmediatePopup="True" 
-                                                IncrementalFiltering="True" 
-                                                AutoPopulateColumns="False" 
-                                                IsPopupAutoWidth="False" 
-                                                DisplayMember="Name"
-                                                ValueMember="Id">
-                            <dxg:LookUpEditSettings.PopupContentTemplate>
-                                <ControlTemplate>
-                                    <dxg:GridControl Name="PART_GridControl">
-                                        <dxg:GridControl.Columns>
-                                            <dxg:GridColumn IsSmart="True" FieldName="Id" Header="Идентификатор"/>
-                                            <dxg:GridColumn IsSmart="True" FieldName="Name" Header="наименование"/>
-                                        </dxg:GridControl.Columns>
-                                        <dxg:GridControl.View>
-                                            <dxg:TableView AutoWidth="True" ShowSearchPanelMode="Always"/>
-                                        </dxg:GridControl.View>
-                                    </dxg:GridControl>
-                                </ControlTemplate>
-                            </dxg:LookUpEditSettings.PopupContentTemplate>
-                            <dxg:LookUpEditSettings.StyleSettings>
-                                <dxg:SearchLookUpEditStyleSettings/>
-                            </dxg:LookUpEditSettings.StyleSettings>
-                        </dxg:LookUpEditSettings>
-                    </dxg:GridColumn.EditSettings>
-                </dxg:GridColumn>-->
+                <dxg:GridColumn IsSmart="True" FieldName="PAYMENT_METHOD_ID" Header="Способ оплаты">
+                    <dxg:GridColumn.CellTemplate>
+                        <DataTemplate>
+                            <dxe:ComboBoxEdit Name="PART_Editor"  
+                                        ItemsSource="{Binding Path=(services:DataRepository.PaymentMethods)}"  
+                                DisplayMember="NAME"  
+                                ValueMember="ID"  
+                                EditValue="{Binding Data.PAYMENT_METHOD_ID}" >
+                                <dxe:ComboBoxEdit.StyleSettings>
+                                    <dxe:CheckedComboBoxStyleSettings/>
+                                </dxe:ComboBoxEdit.StyleSettings>
+                            </dxe:ComboBoxEdit>
+                        </DataTemplate>
+                    </dxg:GridColumn.CellTemplate>
+                </dxg:GridColumn>
 
                 <dxg:GridColumn IsSmart="True" FieldName="HAS_ORIGINAL" Header="Оригинал"/>
-                <!--<dxg:GridColumn.EditSettings>
-                    <dxe:CheckEditSettings/>
-                </dxg:GridColumn.EditSettings>-->
-
 
                 <dxg:GridColumn IsSmart="True" FieldName="HAS_SCAN" Header="Скан"/>
-                <!--<dxg:GridColumn.EditSettings>
-                        <dxe:CheckEditSettings/>
-                    </dxg:GridColumn.EditSettings>
-                </dxg:GridColumn>-->
 
             </dxg:GridControl.Columns>
             <dxg:GridControl.View>
                 <dxg:TableView Name="view" 
-                               AllowEditing="False" 
+                               AllowEditing="True" 
                                BestFitMode="AllRows"    
                                NavigationStyle="Row"
                                ShowGroupPanel="True"
